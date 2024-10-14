@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  {{ partial "head" . }}
+  <body>
+    <div class="content">
+      {{ partial "navigation/header" . }}
+      <section class="page">
+        {{ block "main" . }} {{ end }}
+      </section>
+    </div>
+
+    <script async src="https://cdn.snipcart.com/themes/v3.2.1/default/snipcart.js"></script>
+    <div hidden id="snipcart" data-api-key="TODO"></div>
+  </body>
+</html>

@@ -1,2 +1,2 @@
-# shop.vaines.org
-shop.vaines.org site
+# Visit shop.vaines.org to buy my stuff
+

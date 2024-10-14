@@ -1,0 +1,47 @@
+[
+	{
+		"id": "THEOBJECT",
+		"name": "The Object",
+		"price": "10",
+		"image": "/uploads/20240928-theobject.jpeg",
+		"description": "A strange object, I don't really know what it is, what its for or why it exists. If you do, please let me know",
+		"material": "Ebonised Beech",
+		"product_url": "/"
+	},
+	{
+		"id": "BEECHTUB",
+		"name": "A Beech Tub",
+		"price": "15",
+		"image": "/uploads/20240920-elmtub.jpeg",
+		"description": "A tub, made from elm. It did originally have a lid, but apparently if you turn grean wood; things expand..",
+		"material": "Elm",
+		"product_url": "/"
+	},
+	{
+		"id": "PIZZAWHEEL",
+		"name": "Pizza Wheel",
+		"price": "20",
+		"image": "/uploads/20240920-pizzawheel.jpeg",
+		"description": "A top quality pizza slicer with a Sapele handle. Made out of jealousy when a friend got a new pizza oven.",
+		"material": "Sapele",
+		"product_url": "/"
+	},
+	{
+		"id": "DETECTIVE",
+		"name": "Magnifying Glass",
+		"price": "20",
+		"image": "/uploads/20241012-magnifyingglass.jpeg",
+		"description": "A Magifying glass with a beech handle",
+		"material": "Beech",
+		"product_url": "/"
+	},
+	{
+		"id": "BOULBOWL",
+		"name": "A Boul Bowl",
+		"price": "50",
+		"image": "/uploads/20241013-boulbowl.jpeg",
+		"description": "A bowl made from a vintage boul, its full of wierd fractures and cracks from its former life. It kinda looks like an urn if i'm honest.",
+		"material": "Lignum Vitae",
+		"product_url": "/"
+	}
+]

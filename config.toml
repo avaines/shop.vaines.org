@@ -1,5 +1,3 @@
 baseURL = 'https://shop.vaines.org/'
 languageCode = 'en-gb'
 title = '|Shop'
-
-snipcartApiKey = "TODO"

@@ -1,0 +1,11 @@
+baseURL = "https://shop.vaines.org/"
+languageCode = "en-gb"
+title = "| Shop"
+
+[params]
+    productJsonUrl = "https://fetch-product-data.shop.vaines.org"
+
+[caches]
+  [caches.getresource]
+    dir = ':resourceDir/_gen'
+    maxAge = 0

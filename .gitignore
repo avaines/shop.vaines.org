@@ -1,11 +1,4 @@
 .DS_Store
-node_modules/
-resources/_gen/
-*.lock
-.hugo_build.lock
 .vscode/
-public/
-content/test/
-hugo_stats.json
-node_modules
 .env
+backend

@@ -1,0 +1,19 @@
+
+<div id="carousel10" class="carousel product__image" duration="{{ .duration }}" items="{{ .items }}">
+  <ul>
+    {{ range $index, $image := .context.images }}
+    <li id="c10_slide{{ add $index 1}}" style="min-width: calc(100%/{{ $.items }}); padding-bottom: {{ $.height }}{{ $.unit }};">
+      <img src="{{ $image }}" alt="Product image shot in slider" />
+      </li>
+    {{ end }}
+  </ul>
+  <ol>
+    {{ range $index, $image := .context.images }}
+    <li>
+      <a href="#c10_slide{{ add $index 1 }}"></a>
+    </li>
+    {{ end }}
+  </ol>
+  <div class="prev">&lsaquo;</div>
+  <div class="next">&rsaquo;</div>
+</div>

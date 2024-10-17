@@ -1,0 +1,25 @@
+<div class="product">
+  <h2 class="product__name">{{ .name }}</h2>
+  
+    {{ partial "carousel.html" (dict "context" . "items" "1" "height" "100" "unit" "%" "duration" "5000") }}
+
+  
+  <p class="product__description">
+    {{ .description }}
+    <br><br>
+    <b>Material: </b><i>{{ .material }}</i>
+  </p>
+  
+  <div class="product__button-container">
+    <div class="product__price">£{{ .price }}</div>
+    <button
+    class="snipcart-add-item buy-button"
+    data-item-id="{{ .id }}"
+    data-item-name="{{ .name }}"
+    data-item-price="{{ .price }}"
+    data-item-url="{{ .product_url }}"
+    data-item-description="{{ .description }}">
+    Add to cart
+  </button>
+</div>
+</div>

@@ -6,7 +6,7 @@
   <title>Vaines.org {{ .Site.Title }} </title>
   
   {{ with resources.Get "sass/main.scss" }}
-    {{ $style := . | css.Sass }}
+    {{ $style := . | resources.ToCSS }}
     <link rel="stylesheet" href="{{ $style.Permalink | relURL }}" type="text/css">
   {{ end }}
 </head>

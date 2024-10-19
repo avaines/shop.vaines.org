@@ -3,7 +3,10 @@ languageCode = "en-gb"
 title = "| Shop"
 
 [params]
-    productJsonUrl = "https://fetch-product-data.shop.vaines.org"
+  productJsonUrl = "https://fetch-product-data.shop.vaines.org"
+  productCheckoutUrl = "https://checkout.shop.vaines.org"
+  copyright = "Copyright © 2024 - Aiden Vaines · All rights reserved"
+  socialInstagram = "aidensgotwood"
 
 [caches]
   [caches.getresource]

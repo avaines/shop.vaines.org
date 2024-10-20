@@ -18,57 +18,5 @@
   {{ errorf "Unable to get remote resource %q" $dataUrl }}
   {{ end }}
 
-
-  <!-- Cart Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Checkout</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-header">
-          <div class="container">
-            <div class="row">
-              <div class="col-sm-8">
-                <h3 id="item-name"></h6>
-              </div>
-              <div class="col-sm-4">
-                <p id="item-price"></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm"><p>(<i id="item-id"></i>)</p></div>
-
-            </div>
-          </div>
-
-        </div>
-        <div class="modal-body">
-
-          <form id="checkout-form" action="{{ $checkoutUrl }}" method='post'>
-            <div class="mb-3">
-              <label for="name" class="form-label">Full Name</label>
-              <input type="text" class="form-control" id="name" required>
-            </div>
-            <div class="mb-3">
-              <label for="email" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="email" required>
-            </div>
-            <div class="mb-3">
-              <label for="address" class="form-label">Shipping Address</label>
-              <textarea class="form-control" id="address" rows="2" required></textarea>
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary">Proceed to Payment</button>
-            </div>
-          </form>
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-
 </main>
 {{ end }}

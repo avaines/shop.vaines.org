@@ -2,7 +2,7 @@
 	{
 		"id": "THEOBJECT",
 		"name": "The Object",
-		"price": "10",
+		"price": "20",
 		"images": [
 			"/uploads/20240928-theobject.jpeg",
 			"/uploads/20240928-theobject-1.jpeg",
@@ -11,12 +11,13 @@
 		"description": "A strange object, I don't really know what it is, what its for or why it exists. If you do, please let me know",
 		"material": "Ebonised Beech",
 		"product_url": "/",
-		"available": true
+		"available": true,
+		"link": "https://square.link/u/3qEL6ihj"
 	},
 	{
 		"id": "BEECHTUB",
 		"name": "A Beech Tub",
-		"price": "15",
+		"price": "25",
 		"images": [
 			"/uploads/20240920-elmtub.jpeg"
 		],
@@ -41,7 +42,7 @@
 	{
 		"id": "DETECTIVE",
 		"name": "Magnifying Glass",
-		"price": "20",
+		"price": "25",
 		"images": [
 			"/uploads/20241012-magnifyingglass.jpeg",
 			"/uploads/20241012-magnifyingglass-1.jpeg"
@@ -54,7 +55,7 @@
 	{
 		"id": "BOULBOWL",
 		"name": "A Boul Bowl",
-		"price": "50",
+		"price": "60",
 		"images": [
 			"/uploads/20241013-boulbowl.jpeg",
 			"/uploads/20241013-boulbowl-1.jpeg",

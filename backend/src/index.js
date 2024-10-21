@@ -1,35 +1,4 @@
 /**
- * Fetch Product Data Worker.
- * 	It reads product data from the KV store using PRODUCTS.get.
- *  The products are returned as a JSON response to the client.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- */
-
-// export default {
-//     async fetch(request, env, ctx) {
-// 		try {
-//             // Fetch product data from KV store
-//             const products = await env.PRODUCTS.get("product-list", { type: "json" });
-
-//             if (!products) {
-//               return new Response("No products available", { status: 404 });
-//             }
-
-//             return new Response(JSON.stringify(products), {
-//               headers: { "Content-Type": "application/json" },
-//             });
-// 		} catch (e) {
-// 			return new Response(e.message, { status: 500 });
-// 		  }
-//     }
-// }
-
-
-
-/**
  * Cloudflare Worker function to retrieve and cache product data from Square's API.
  *
  * This script caches the result in Cloudflare KV storage to avoid frequent API calls, 

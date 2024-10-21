@@ -2,6 +2,10 @@ baseURL = "https://shop.vaines.org/"
 languageCode = "en-gb"
 title = "| Shop"
 
+[services]
+  [services.googleAnalytics]
+    ID = "G-RTJ6P9BQN3"
+
 [params]
   productJsonUrl = "https://fetch-product-data.shop.vaines.org"
   copyright = "Copyright © 2024 - Aiden Vaines · All rights reserved"

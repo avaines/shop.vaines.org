@@ -1,0 +1,22 @@
+{{ define "main" }}
+{{ $data := dict }}
+{{ $dataUrl := $.Site.Params.productJsonUrl }}
+{{ $checkoutUrl := $.Site.Params.productCheckoutUrl }}
+
+<main class="products">
+
+  {{ with resources.GetRemote $dataUrl }}
+  {{ with .Err }}
+  {{ errorf "%s" . }}
+  {{ else }}
+  {{ $data = .Content | transform.Unmarshal }}
+  {{ range $data }}
+  {{ partial "product" . }}
+  {{ end }}
+  {{ end }}
+  {{ else }}
+  {{ errorf "Unable to get remote resource %q" $dataUrl }}
+  {{ end }}
+
+</main>
+{{ end }}

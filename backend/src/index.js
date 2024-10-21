@@ -96,13 +96,26 @@ export default {
             .filter(obj => obj.type === "IMAGE" && imageIds.includes(obj.id)) // Filter out the relevant images
             .map(imageObj => imageObj.image_data.url); // Extract the image URLs
 
+        // TODO: The payment linux API doesnt seem to work properly, as a temporary fix ive stuck the link in a 'tmp_payment_linux' custom attribute
+        let tmpPaymentLink = "#"
+        const customAttributes = item.custom_attribute_values
+
+        for (const key in customAttributes) {
+          if (customAttributes[key].name === "tmp_payment_link") {
+            tmpPaymentLink = customAttributes[key].string_value;
+            break;
+          }
+        }
+        // TODO: End
+
         return {
           id: item.id,
           name: item.item_data.name,
           price: item.item_data.variations[0].item_variation_data.price_money.amount/100, // Square API returns currency in 
           description: item.item_data.description,
           images: imageUrls,
-          payment_link: `https://squareup.com/pay/${item.id}`,  // Example payment link
+          payment_url: tmpPaymentLink, // TODO: The payment linux API doesnt seem to work properly, as a temporary fix ive stuck the link in a 'tmp_payment_linux' custom attribute
+          // payment_url: `https://squareup.com/pay/${item.id}`,
         };
       });
     }

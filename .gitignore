@@ -1,4 +1,2 @@
 .DS_Store
 .vscode/
-.env
-serverless.yml

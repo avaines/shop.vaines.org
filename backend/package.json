@@ -5,9 +5,9 @@
   "scripts": {
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
-    "start": "wrangler dev",
+    "start": "wrangler dev"
   },
   "devDependencies": {
-    "wrangler": "^3.60.3",
+    "wrangler": "^3.60.3"
   }
 }

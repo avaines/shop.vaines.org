@@ -106,12 +106,15 @@ export default {
         // For each category, check the ID aggainst the CategoryMap to get a list of the friendly. Empty list if theres no categories
         const categories = item.item_data.categories ? item.item_data.categories.map(ittr => categoryMap[ittr.id]) : []
 
+        const hasStockAvailable = !item.item_data.variations[0].item_variation_data.location_overrides.every(location => location.sold_out === true);
+
         return {
           id: item.id,
           name: item.item_data.name,
           price: item.item_data.variations[0].item_variation_data.price_money.amount / 100, // Square API returns currency in thousands
           description: item.item_data.description,
           images: imageUrls,
+          available: hasStockAvailable,
           categories: categories,
           payment_url: paymentUrl,
         };

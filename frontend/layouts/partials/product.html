@@ -8,7 +8,14 @@
   </p>
   
   <div class="product__button-container">
-    <div class="product__price">£{{ .price }}</div>
-    <a href="{{ .payment_url }}" class="buy-button">Buy</a>
+    {{ if eq .available true }}
+      <div class="product__price">£{{ .price }}
+        <a href="{{ .payment_url }}" class="buy-button">Buy</a>
+      </div>
+    {{ else }}
+      <div class="product__price">
+        <a class="buy-button buy-button-sold">Sold</a>
+      </div>
+    {{ end }}
   </div>
 </div>

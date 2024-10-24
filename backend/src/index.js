@@ -101,12 +101,14 @@ export default {
         const imageUrls = batchData.related_objects
           .filter(obj => obj.type === "IMAGE" && imageIds.includes(obj.id))
           .map(imageObj => imageObj.image_data.url);
-          const paymentUrl = await getOrCreatePaymentLink(item.item_data.variations[0].id, item.item_data.name);
+        const paymentUrl = await getOrCreatePaymentLink(item.item_data.variations[0].id, item.item_data.name);
           
-        // For each category, check the ID aggainst the CategoryMap to get a list of the friendly. Empty list if theres no categories
+        // For each category, check the ID aggainst the Category Map to get a list of the friendly. Empty list if theres no categories
         const categories = item.item_data.categories ? item.item_data.categories.map(ittr => categoryMap[ittr.id]) : []
 
-        const hasStockAvailable = !item.item_data.variations[0].item_variation_data.location_overrides.every(location => location.sold_out === true);
+        const hasStockAvailable = !(item.item_data.is_archived || item.is_deleted || 
+          item.item_data.variations[0].item_variation_data.location_overrides.every(location => location.sold_out === true)
+        );
 
         return {
           id: item.id,

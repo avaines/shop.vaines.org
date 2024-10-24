@@ -110,15 +110,17 @@ export default {
           item.item_data.variations[0].item_variation_data.location_overrides.every(location => location.sold_out === true)
         );
 
-        return {
-          id: item.id,
-          name: item.item_data.name,
-          price: item.item_data.variations[0].item_variation_data.price_money.amount / 100, // Square API returns currency in thousands
-          description: item.item_data.description,
-          images: imageUrls,
-          available: hasStockAvailable,
-          categories: categories,
-          payment_url: paymentUrl,
+        if ( !item.item_data.is_archived && !item.is_deleted ) {
+          return {
+            id: item.id,
+            name: item.item_data.name,
+            price: item.item_data.variations[0].item_variation_data.price_money.amount / 100, // Square API returns currency in thousands
+            description: item.item_data.description,
+            images: imageUrls,
+            available: hasStockAvailable,
+            categories: categories,
+            payment_url: paymentUrl,
+          };
         };
       }));
     }

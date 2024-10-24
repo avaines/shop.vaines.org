@@ -14,9 +14,10 @@ export default {
     const SQUARE_ACCESS_TOKEN = env.SQUARE_ACCESS_TOKEN;
     const SQUARE_API_BASE_URL = env.SQUARE_API_BASE_URL || 'https://connect.squareupsandbox.com/v2/';
     const LOCATION_ID = env.LOCATION_ID
-
+    const CATALOG_CHANGE_HOOK_URL = env.CATALOG_CHANGE_HOOK_URL || null
     const DEBUG = env.DEBUG === 'true'; // Enable debug logging if DEBUG is 'true'
     const cacheKey = "product_list_cache";
+    const cacheAgeStampKey = 'product_list_cache_age'
 
     function logDebug(message, data) {
       if (DEBUG) {
@@ -32,7 +33,7 @@ export default {
        * @param {object} [body] - Optional body
        * @returns {Promise<object>} - The JSON response
        */
-      const url = `${SQUARE_API_BASE_URL}${endpoint}`;
+      const url = `${endpoint}`;
       const options = {
         method,
         headers: {
@@ -57,7 +58,7 @@ export default {
 
     async function fetchFromSquareAPI() {
       logDebug("Fetching product list and categories from Square API...");
-      const catalogData = await apiRequest('catalog/list?types=ITEM,CATEGORY', 'GET');
+      const catalogData = await apiRequest(`${SQUARE_API_BASE_URL}/catalog/list?types=ITEM,CATEGORY`, 'GET');
       logDebug("Received catalog data", catalogData);
 
       const items = catalogData.objects.filter(obj => obj.type === 'ITEM');
@@ -72,15 +73,25 @@ export default {
       // Get additional image information and payment URLs for each item
       const itemsWithDetails = await fetchDetailsForItems(items, categoryMap);
 
-      // Cache response with a timestamp
-      const cacheData = {
-        data: itemsWithDetails,
-        timestamp: Date.now(),
-      };
-      await env.PRODUCT_CACHE_KV.put(cacheKey, JSON.stringify(cacheData));
+      await env.PRODUCT_CACHE_KV.put(cacheAgeStampKey, Date.now());
 
-      logDebug("Caching data in KV with timestamp", cacheData);
+      // Check if the product catalogue is the same as the stuff stored in the KB
+      const cachedPitemDetails = await env.PRODUCT_CACHE_KV.get(cacheKey)
+      if (cachedPitemDetails && cachedPitemDetails == JSON.stringify(itemsWithDetails)) {
+        logDebug("Product catalogue matches what we already have cached in KV");
 
+      } else {
+        logDebug("Product catalogue has changed updating, caching data in KV", itemsWithDetails);
+        await env.PRODUCT_CACHE_KV.put(cacheKey, JSON.stringify(itemsWithDetails));
+
+        if (CATALOG_CHANGE_HOOK_URL != null ) {
+          // Call the web hook to rebuild the pages
+          logDebug("Triggering Pages deployment for data-reload.");
+          await apiRequest(CATALOG_CHANGE_HOOK_URL, 'POST');
+        }
+
+      }
+      
       return itemsWithDetails;
     }
 
@@ -93,10 +104,10 @@ export default {
       };
 
       logDebug("Fetching batch of item images and payment links from Square API...", body);
-      const batchData = await apiRequest('catalog/batch-retrieve', 'POST', body);
+      const batchData = await apiRequest(`${SQUARE_API_BASE_URL}/catalog/batch-retrieve`, 'POST', body);
       logDebug("Received batch data for items", batchData);
 
-      return Promise.all(items.map(async (item) => {
+      const results = await Promise.all(items.map(async (item) => {
         const imageIds = item.item_data.image_ids;
         const imageUrls = batchData.related_objects
           .filter(obj => obj.type === "IMAGE" && imageIds.includes(obj.id))
@@ -110,19 +121,24 @@ export default {
           item.item_data.variations[0].item_variation_data.location_overrides.every(location => location.sold_out === true)
         );
 
-        if ( !item.item_data.is_archived && !item.is_deleted ) {
-          return {
-            id: item.id,
-            name: item.item_data.name,
-            price: item.item_data.variations[0].item_variation_data.price_money.amount / 100, // Square API returns currency in thousands
-            description: item.item_data.description,
-            images: imageUrls,
-            available: hasStockAvailable,
-            categories: categories,
-            payment_url: paymentUrl,
-          };
+        if ( item.item_data.is_archived || item.is_deleted ) {
+          return null //explicitly skip the element if this item isnt suitable (archived or deleted)
+        }
+
+        return {
+          id: item.id,
+          name: item.item_data.name,
+          price: item.item_data.variations[0].item_variation_data.price_money.amount / 100, // Square API returns currency in thousands
+          description: item.item_data.description,
+          images: imageUrls,
+          available: hasStockAvailable,
+          categories: categories,
+          payment_url: paymentUrl,
         };
+        
       }));
+
+      return results.filter(item => item !== null);
     }
 
     async function getOrCreatePaymentLink(variationId, itemName) {
@@ -153,7 +169,7 @@ export default {
         }
       };
     
-      const createPaymentLinkResponse = await apiRequest('online-checkout/payment-links', 'POST', newPaymentLinkData);
+      const createPaymentLinkResponse = await apiRequest(`${SQUARE_API_BASE_URL}/online-checkout/payment-links`, 'POST', newPaymentLinkData);
     
       if (!createPaymentLinkResponse || !createPaymentLinkResponse.payment_link) {
         throw new Error(`Failed to create payment link for variation ${variationId}`);
@@ -169,19 +185,24 @@ export default {
 
     // Check cache
     logDebug("Checking KV cache for product list...");
-    const cachedData = await env.PRODUCT_CACHE_KV.get(cacheKey);
-    if (cachedData) {
-      const parsedCache = JSON.parse(cachedData);
-      const ageInMinutes = (Date.now() - parsedCache.timestamp) / 60000;
-      logDebug(`Cache age: ${ageInMinutes} minutes`);
+    const itemsWithDetails = await env.PRODUCT_CACHE_KV.get(cacheKey);
+    const itemDetailCacheAge = await env.PRODUCT_CACHE_KV.get(cacheAgeStampKey);
+  
+    if (itemsWithDetails) {
+      const parsedCache = JSON.parse(itemsWithDetails);
 
-      if (ageInMinutes < CACHE_EXPIRATION_MINUTES) {
-        logDebug("Cache is fresh, returning cached data.");
-        return new Response(JSON.stringify(parsedCache.data), {
-          headers: { 'Content-Type': 'application/json' },
-        });
-      } else {
-        logDebug("Cache is stale, fetching fresh data...");
+      if (itemDetailCacheAge) {
+        const ageInMinutes = (Date.now() - itemDetailCacheAge) / 60000;
+        logDebug(`Cache age: ${ageInMinutes} minutes`);
+
+        if (ageInMinutes < CACHE_EXPIRATION_MINUTES) {
+          logDebug("Cache is fresh, returning cached data.");
+          return new Response(JSON.stringify(parsedCache), {
+            headers: { 'Content-Type': 'application/json' },
+          });
+        } else {
+          logDebug("Cache is stale, fetching fresh data...");
+        }
       }
     } else {
       logDebug("No cached data found, fetching fresh data...");

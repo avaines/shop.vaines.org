@@ -12,6 +12,6 @@ enabled = true
 [vars]
 CACHE_EXPIRATION_MINUTES = "60"
 DEBUG = "true"
-SQUARE_API_BASE_URL = "https://connect.squareup.com/v2/"
+SQUARE_API_BASE_URL = "https://connect.squareup.com/v2"
 # SQUARE_ACCESS_TOKEN="" # Encrypted secret in the console
 # LOCATION_ID = "" # Encrypted secret in the console

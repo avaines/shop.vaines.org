@@ -121,6 +121,15 @@
 	margin: 0
 }
 
+.product__name a {
+	grid-area: name;
+	font-size: 36px;
+	margin: 0;
+	color: inherit;
+  	text-decoration: inherit;
+
+}
+
 .product__image {
 	grid-area: image;
 	width: 100%;

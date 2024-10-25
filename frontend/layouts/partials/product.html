@@ -1,5 +1,5 @@
 <div class="product">
-  <h2 class="product__name">{{ .name }}</h2>
+  <h2 class="product__name"><a name="{{ .name }}" href="#{{ .name }}">{{ .name }}</a></h2>
     {{ partial "carousel.html" (dict "context" . "items" "1" "height" "100" "unit" "%" "duration" "5000") }}
 
   <p class="product__description">

@@ -1,11 +1,11 @@
 /**
  * Cloudflare Worker function to retrieve and cache product data from Square's API.
  *
- * This script caches the result in Cloudflare KV storage to avoid frequent API calls, 
+ * This script caches the result in Cloudflare KV storage to avoid frequent API calls,
  *   reducing the risk of hitting rate limits.
- * 
+ *
  * The cache expires after a set number of minutes, defined by the environment variable CACHE_EXPIRATION_MINUTES.
- * 
+ *
  * Returns a JSON object containing item id, name, price, description, list of image URLs, and payment links.
  */
 export default {
@@ -91,7 +91,7 @@ export default {
         }
 
       }
-      
+
       return itemsWithDetails;
     }
 
@@ -113,16 +113,18 @@ export default {
           .filter(obj => obj.type === "IMAGE" && imageIds.includes(obj.id))
           .map(imageObj => imageObj.image_data.url);
         const paymentUrl = await getOrCreatePaymentLink(item.item_data.variations[0].id, item.item_data.name);
-          
-        // For each category, check the ID aggainst the Category Map to get a list of the friendly. Empty list if theres no categories
+
+        // For each category, check the ID against the Category Map to get a list of the friendly. Empty list if theres no categories
         const categories = item.item_data.categories ? item.item_data.categories.map(ittr => categoryMap[ittr.id]) : []
 
-        const hasStockAvailable = !(item.item_data.is_archived || item.is_deleted || 
-          item.item_data.variations[0].item_variation_data.location_overrides.every(location => location.sold_out === true)
+        const hasStockAvailable = !(item.item_data.is_archived ||
+          item.is_deleted ||
+          (item.item_data.variations[0].item_variation_data.location_overrides &&
+           item.item_data.variations[0].item_variation_data.location_overrides.every(location => location.sold_out === true))
         );
 
         if ( item.item_data.is_archived || item.is_deleted ) {
-          return null //explicitly skip the element if this item isnt suitable (archived or deleted)
+          return null //explicitly skip the element if this item isn't suitable (archived or deleted)
         }
 
         return {
@@ -135,7 +137,7 @@ export default {
           categories: categories,
           payment_url: paymentUrl,
         };
-        
+
       }));
 
       return results.filter(item => item !== null);
@@ -143,17 +145,17 @@ export default {
 
     async function getOrCreatePaymentLink(variationId, itemName) {
       logDebug(`Checking for existing payment link for variation ${variationId}...`);
- 
+
       // Check if a payment link exists for the item variation
       const cachedPaymentLink = await env.PRODUCT_CACHE_KV.get(variationId);
         if (cachedPaymentLink) {
           logDebug(`Found existing payment link for variation ${variationId}`, cachedPaymentLink);
           return cachedPaymentLink;
         }
-    
+
       // If no payment link exists, create a new one
       logDebug(`No payment link found for variation ${variationId}, creating a new one...`);
-    
+
       const newPaymentLinkData = {
         idempotency_key: crypto.randomUUID(), // Unique ID to ensure the request is not repeated
         order: {
@@ -168,26 +170,26 @@ export default {
           ask_for_shipping_address: true
         }
       };
-    
+
       const createPaymentLinkResponse = await apiRequest(`${SQUARE_API_BASE_URL}/online-checkout/payment-links`, 'POST', newPaymentLinkData);
-    
+
       if (!createPaymentLinkResponse || !createPaymentLinkResponse.payment_link) {
         throw new Error(`Failed to create payment link for variation ${variationId}`);
       }
-      
+
       logDebug(`Created new payment link for variation ${variationId}`, createPaymentLinkResponse);
       await env.PRODUCT_CACHE_KV.put(variationId, createPaymentLinkResponse.payment_link.url);
       logDebug(`New payment link cached as ${variationId}:createPaymentLinkResponse`);
 
       return createPaymentLinkResponse.payment_link.url;
     }
-        
+
 
     // Check cache
     logDebug("Checking KV cache for product list...");
     const itemsWithDetails = await env.PRODUCT_CACHE_KV.get(cacheKey);
     const itemDetailCacheAge = await env.PRODUCT_CACHE_KV.get(cacheAgeStampKey);
-  
+
     if (itemsWithDetails) {
       const parsedCache = JSON.parse(itemsWithDetails);
 

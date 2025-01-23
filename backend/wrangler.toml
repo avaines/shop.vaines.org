@@ -1,6 +1,6 @@
 name = "vaines_org_shop_products"
-main = "src/index.js"
-compatibility_date = "2024-10-20"
+main = "src/square.js"
+compatibility_date = "2024-10-11"
 
 kv_namespaces = [
   { binding = "PRODUCT_CACHE_KV", id = "0d94419b8b5f48eebf97c20ece67933a" }
@@ -9,9 +9,22 @@ kv_namespaces = [
 [observability]
 enabled = true
 
+[triggers]
+crons = [
+  "0 0 * * *" # Midnight-ly
+]
+
 [vars]
 CACHE_EXPIRATION_MINUTES = "60"
 DEBUG = "true"
+
+ETSY_API_BASE_URL = "https://openapi.etsy.com/v2/"
 SQUARE_API_BASE_URL = "https://connect.squareup.com/v2"
+
+# See .dev.env
 # SQUARE_ACCESS_TOKEN="" # Encrypted secret in the console
 # LOCATION_ID = "" # Encrypted secret in the console
+
+# ETSY_API_KEY = "" # Encrypted secret in the console
+# ETSY_SHARED_SECRET = "" # Encrypted secret in the console
+# ETSY_SHOP_ID = "" # Encrypted secret in the console

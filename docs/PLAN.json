@@ -56,7 +56,7 @@
       "Create .env.example file",
       "Add ETSY_API_KEY=",
       "Add ETSY_SHOP_ID=",
-      "Add REFRESH_SECRET=",
+      "Add ETSY_API_SHARED_SECRET=",
       "Document each variable with comments"
     ],
     "validation": [
@@ -358,8 +358,8 @@
       "npx vitest run passes",
       "TTL expiry tested"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added cache TTL unit tests covering pre-expiry hit and post-expiry miss with mocked system time"
   },
   {
     "id": "P021",
@@ -379,8 +379,8 @@
       "Cache hit skips Etsy API call",
       "Response matches product schema"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Wired /api/products to Etsy client + listing transform + in-memory cache with cache-first responses"
   },
   {
     "id": "P022",
@@ -389,7 +389,7 @@
     "steps": [
       "Read URL query params in onRequest",
       "Check for refresh=<secret> param",
-      "Compare to env.REFRESH_SECRET",
+      "Compare to env.ETSY_API_SHARED_SECRET",
       "Return 403 if mismatch",
       "Clear cache if match",
       "Proceed with fresh fetch"
@@ -399,8 +399,8 @@
       "?refresh=<correct_secret> bypasses cache",
       "Fresh data returned"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added refresh secret validation in /api/products, 403 on mismatch, cache clear + fresh fetch on valid secret"
   },
   {
     "id": "P023",
@@ -418,8 +418,8 @@
       "No cache returns []",
       "Error logged"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Wrapped Etsy fetch in try/catch, logging failures and returning stale cached data when available, otherwise []"
   },
   {
     "id": "P024",
@@ -436,8 +436,8 @@
       "Error message lists missing vars",
       "Status code is 500"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: /api/products now validates ETSY_API_KEY and ETSY_SHOP_ID, returning 500 with explicit missing variable list"
   },
   {
     "id": "P025",
@@ -455,8 +455,8 @@
       "npx vitest run passes",
       "Test covers happy path"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added integration test for /api/products happy path with mocked Etsy response"
   },
   {
     "id": "P026",
@@ -473,8 +473,8 @@
       "onScheduled function exported",
       "Cron triggers documented in README"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added Wrangler cron trigger, exported onScheduled handler, and documented daily schedule in README"
   },
   {
     "id": "P027",
@@ -493,8 +493,8 @@
       "Contains block main",
       "hugo build succeeds"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added Hugo base layout with main block and header/footer placeholders"
   },
   {
     "id": "P028",
@@ -512,8 +512,8 @@
       "Includes nav element",
       "hugo build succeeds"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added header partial with site title, primary nav links, and category nav container"
   },
   {
     "id": "P029",
@@ -530,8 +530,8 @@
       "Contains footer element",
       "hugo build succeeds"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added footer partial with copyright, privacy link, and placeholder social links"
   },
   {
     "id": "P030",
@@ -548,8 +548,8 @@
       "Header and footer render",
       "hugo build succeeds"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Converted homepage to Hugo main block and rendered header/footer via base template partials"
   },
   {
     "id": "P031",
@@ -567,8 +567,8 @@
       "hugo build generates about/index.html",
       "/about loads in browser"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added About content page and default single-page layout; Hugo build now generates public/about/index.html"
   },
   {
     "id": "P032",
@@ -588,8 +588,8 @@
       "Form has proper fields",
       "hugo build succeeds"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added Contact page content and Formspree-backed layout with name/email/message fields and submit button"
   },
   {
     "id": "P033",
@@ -607,8 +607,8 @@
       "Grid displays 4 columns on desktop",
       "Grid displays 2 columns on mobile"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added static/css/main.css with .product-grid set to 4 desktop columns and 2 mobile columns; wired stylesheet and applied class to products container."
   },
   {
     "id": "P034",
@@ -626,8 +626,8 @@
       "Images responsive",
       "Layout looks organised"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added product card styling in shared stylesheet with borders, padding, shadows, responsive images, heading, and truncated description"
   },
   {
     "id": "P035",

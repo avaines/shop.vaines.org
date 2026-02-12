@@ -12,12 +12,12 @@ Legacy Hugo site with separate Cloudflare Worker fetching Square API data. Refac
 **Priority:** P0 (Blocker)
 
 - [x] Pages Function at `/api/products` returns JSON product list
-- [ ] Scheduled trigger: daily at midnight (00:00 UTC)
-- [ ] Manual trigger: `GET /api/products?refresh=<SECRET>` forces immediate sync
+- [x] Scheduled trigger: daily at midnight (00:00 UTC)
+- [x] Manual trigger: `GET /api/products?refresh=<SECRET>` forces immediate sync
 - [x] Returns product schema: `{ id, name, description, images[], available, categories[], etsyUrl }`
-- [ ] Uses Etsy API v3 with credentials from environment variables
-- [ ] Returns cached response if < 60 minutes old (no external KV needed)
-- [ ] Handles Etsy API errors gracefully (returns last good data or empty array)
+- [x] Uses Etsy API v3 with credentials from environment variables
+- [x] Returns cached response if < 60 minutes old (no external KV needed)
+- [x] Handles Etsy API errors gracefully (returns last good data or empty array)
 
 **Acceptance Criteria:**
 - Function responds within 3 seconds for cached requests
@@ -25,7 +25,7 @@ Legacy Hugo site with separate Cloudflare Worker fetching Square API data. Refac
 - Images array contains direct Etsy CDN URLs
 - Categories extracted from Etsy listing taxonomy
 - Invalid refresh secret returns 403
-- Missing Etsy credentials returns 500 with helpful error
+- [x] Missing Etsy credentials returns 500 with helpful error
 
 ---
 
@@ -36,10 +36,10 @@ Legacy Hugo site with separate Cloudflare Worker fetching Square API data. Refac
 - [x] Homepage displays product grid (4 columns desktop, 2 mobile)
 - [ ] Individual product detail pages (`/products/<slug>`)
 - [ ] Dynamic category pages (`/categories/<category-slug>`)
-- [ ] About page (`/about`)
-- [ ] Contact page (`/contact`) with Formspree form
+- [x] About page (`/about`)
+- [x] Contact page (`/contact`) with Formspree form
 - [ ] Responsive navigation header with category menu
-- [ ] Footer with basic links
+- [x] Footer with basic links
 
 **Acceptance Criteria:**
 - [ ] `config.toml` contains `productJsonUrl = "/api/products"`
@@ -47,7 +47,7 @@ Legacy Hugo site with separate Cloudflare Worker fetching Square API data. Refac
 - [ ] Navigation auto-populates from product categories
 - [x] "Uncategorised" default category if product has no categories
 - [x] All pages mobile-responsive (viewport meta tag)
-- [ ] Contact form posts to Formspree endpoint
+- [x] Contact form posts to Formspree endpoint
 - [x] Site builds successfully with `hugo` command
 
 ---
@@ -99,7 +99,7 @@ Legacy Hugo site with separate Cloudflare Worker fetching Square API data. Refac
 
 - [x] ESLint configured for Pages Function code
 - [x] Unit tests for Etsy API parsing logic (Vitest or Node test runner)
-- [ ] Integration test: mock Etsy API, verify product JSON schema
+- [x] Integration test: mock Etsy API, verify product JSON schema
 - [x] Build verification: Hugo builds without errors
 - [ ] Linting passes before commit (optional pre-commit hook)
 

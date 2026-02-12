@@ -1,0 +1,25 @@
+{{ define "main" }}
+<section class="container content-page">
+  <article>
+    <h1>{{ .Title }}</h1>
+    {{ .Content }}
+
+    <form
+      action="https://formspree.io/f/your-form-id"
+      method="POST"
+      class="contact-form"
+    >
+      <label for="contact-name">Name</label>
+      <input id="contact-name" name="name" type="text" required>
+
+      <label for="contact-email">Email</label>
+      <input id="contact-email" name="email" type="email" required>
+
+      <label for="contact-message">Message</label>
+      <textarea id="contact-message" name="message" rows="6" required></textarea>
+
+      <button type="submit">Send message</button>
+    </form>
+  </article>
+</section>
+{{ end }}

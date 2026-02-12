@@ -37,7 +37,7 @@ Copy the example environment file:
 cp .env.example .env
 ```
 
-Edit `.env` and add your credentials (not required for stub implementation):
+Edit `.env` and add your credentials:
 
 ```env
 ETSY_API_KEY=your_api_key_here
@@ -67,7 +67,7 @@ The product API is available at:
 curl http://localhost:8788/api/products
 ```
 
-You should receive a JSON array of stub products.
+You should receive a JSON array of products.
 
 ## Building for Production
 
@@ -112,7 +112,9 @@ npm run lint
 3. Add environment variables in the Cloudflare dashboard:
    - `ETSY_API_KEY`
    - `ETSY_SHOP_ID`
-   - `REFRESH_SECRET`
+   - `ETSY_API_SHARED_SECRET`
+4. Scheduled sync is configured via Wrangler cron:
+   - `0 0 * * *` (daily at 00:00 UTC)
 
 Cloudflare Pages will automatically deploy on push to the main branch.
 

@@ -39,11 +39,27 @@ export class Cache {
     const ageMs = this.now() - entry.timestamp;
 
     if (ageMs > this.ttlMs) {
-      this.store.delete(key);
       return null;
     }
 
     return entry.value;
+  }
+
+  /**
+   * Returns the cached value even if TTL has expired.
+   * @param {string} key
+   * @returns {unknown | null}
+   */
+  getStale(key) {
+    const entry = this.store.get(key);
+    return entry ? entry.value : null;
+  }
+
+  /**
+   * @param {string} key
+   */
+  delete(key) {
+    this.store.delete(key);
   }
 }
 

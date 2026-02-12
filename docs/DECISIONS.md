@@ -69,6 +69,30 @@ Use in-memory caching within the Pages Function with 60-minute TTL. No KV namesp
 
 ---
 
+## ADR-003: Preserve stale in-memory cache for Etsy error fallback
+**Date:** 2026-02-12  
+**Status:** Accepted
+
+### Context
+`/api/products` needs graceful failure handling. If Etsy is unavailable, we should return the last good payload when possible.
+
+### Decision
+Keep expired entries in in-memory cache and expose `getStale(key)` for error fallback paths. Normal `get(key)` still enforces TTL and returns `null` when expired.
+
+### Consequences
+**Positive:**
+- Endpoint can return last-known-good product data on transient Etsy failures
+- Maintains normal TTL behaviour for standard reads
+
+**Negative:**
+- Expired entries may remain in memory longer
+
+**Mitigations:**
+- Store only small product payloads
+- Keys remain bounded (`products` cache key)
+
+---
+
 <!-- Template:
 
 ## ADR-NNN: Title

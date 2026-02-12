@@ -1,0 +1,12 @@
+baseURL = "https://shop.vaines.org/"
+languageCode = "en-gb"
+title = "Vaines Shop"
+
+[params]
+  description = "Handcrafted goods and artisan products"
+  author = "Vaines"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true

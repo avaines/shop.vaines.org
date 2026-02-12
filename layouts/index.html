@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Site.Title }}</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        #products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 16px;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .product-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-categories {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 12px;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .availability {
+            font-size: 13px;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .availability.in-stock {
+            background: #e7f5e8;
+            color: #2e7d32;
+        }
+
+        .availability.sold-out {
+            background: #fce4e4;
+            color: #c62828;
+        }
+
+        .etsy-link {
+            color: #F16521;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .etsy-link:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .error {
+            text-align: center;
+            padding: 60px 20px;
+            color: #c62828;
+            background: #fce4e4;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            #products {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #products {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>{{ .Site.Title }}</h1>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="products">
+            <div class="loading">Loading products...</div>
+        </div>
+    </main>
+
+    <script>
+        async function loadProducts() {
+            const container = document.getElementById('products');
+            
+            try {
+                const response = await fetch('/api/products');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const products = await response.json();
+                
+                if (!Array.isArray(products) || products.length === 0) {
+                    container.innerHTML = '<div class="error">No products available</div>';
+                    return;
+                }
+                
+                container.innerHTML = products.map(product => {
+                    const image = product.images && product.images[0] 
+                        ? product.images[0] 
+                        : 'https://placehold.co/600x600/e0e0e0/666?text=No+Image';
+                    
+                    const categories = product.categories && product.categories.length > 0
+                        ? product.categories.join(', ')
+                        : 'Uncategorised';
+                    
+                    const availabilityClass = product.available ? 'in-stock' : 'sold-out';
+                    const availabilityText = product.available ? 'In Stock' : 'Sold Out';
+                    
+                    return `
+                        <div class="product-card">
+                            <img src="${image}" alt="${product.name}" class="product-image" loading="lazy">
+                            <div class="product-info">
+                                <h2 class="product-name">${product.name}</h2>
+                                <p class="product-description">${product.description}</p>
+                                <div class="product-categories">${categories}</div>
+                                <div class="product-footer">
+                                    <span class="availability ${availabilityClass}">${availabilityText}</span>
+                                    <a href="${product.etsyUrl}" class="etsy-link" target="_blank" rel="noopener">View on Etsy</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+            } catch (error) {
+                console.error('Failed to load products:', error);
+                container.innerHTML = `<div class="error">Failed to load products. Please try again later.</div>`;
+            }
+        }
+        
+        // Load products when page is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadProducts);
+        } else {
+            loadProducts();
+        }
+    </script>
+</body>
+</html>

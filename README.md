@@ -1,5 +1,7 @@
 # Visit [shop.vaines.org](https://shop.vaines.org) to buy my stuff...please
 
+
+# TODO: REWRITE ALL OF THIS:
 ## A Hugo e-commerce site, backed by Square payment gateway, supported by Cloudflare workers for dynamic product inventory.
 
 This repository contains the source code for an e-commerce website hosted on **Cloudflare Pages** (frontend) and a **Cloudflare Worker** (backend). The frontend is built using the **Hugo static site generator**, and the backend fetches product data and hosted checkout payment links from the **Square API** with basic caching by way of **Cloudflare KV**. With a zero operating cost *(excluding Square transaction fees)*

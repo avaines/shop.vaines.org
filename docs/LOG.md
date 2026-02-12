@@ -145,3 +145,57 @@ node -e "import('./functions/lib/transform.js').then((m) => { const out = m.tran
 
 **Next failing docs/PLAN.json item:**
 - `P018` — Write unit tests for Etsy transform logic
+
+### 2026-02-12 – [P019] Implement in-memory cache with TTL
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Added an in-memory cache module with TTL-based expiry logic  
+**Outcome:** Success  
+**Notes:** Scoped strictly to P019; no endpoint wiring changes
+
+**What changed:**
+- Created `functions/lib/cache.js`
+- Updated `docs/PLAN.json` to mark `P019` as passed
+
+**Commands run:**
+```bash
+node -e "import('./functions/lib/cache.js').then(({ Cache }) => { let t = 0; const c = new Cache(1000, () => t); c.set('k', { ok: true }); const before = c.get('k'); t = 1001; const after = c.get('k'); if (!before || after !== null) { throw new Error('TTL behaviour failed'); } console.log('cache-behaviour-ok'); }).catch((e) => { console.error(e); process.exit(1); });"
+npm test
+npm run lint
+hugo
+wrangler pages dev ./public --port 8788 --compatibility-date=2024-01-01
+```
+
+**Results:**
+- Targeted cache behaviour check: pass (`cache-behaviour-ok`)
+- `npm test`: pass
+- `npm run lint`: pass
+- `hugo`: pass (with existing taxonomy layout warning unrelated to P019)
+- `wrangler pages dev`: blocked in sandbox (`nice(5) failed: operation not permitted`)
+
+**Next failing docs/PLAN.json item:**
+- `P018` — Write unit tests for Etsy transform logic
+
+### 2026-02-12 – [P018] Unit tests for Etsy transform logic
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Added focused unit tests for `transformListing` and verified project checks  
+**Outcome:** Success  
+**Notes:** Scoped strictly to P018; no feature implementation changes
+
+**What changed:**
+- Created `functions/lib/transform.test.js`
+- Updated `docs/PLAN.json` to mark `P018` as passed
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+```
+
+**Results:**
+- `npm test`: pass (`functions/lib/transform.test.js` added 3 passing tests)
+- `npm run lint`: pass
+- `hugo`: pass (existing taxonomy layout warning remains unrelated to P018)
+
+**Next failing docs/PLAN.json item:**
+- `P020` — Write unit tests for cache TTL behaviour

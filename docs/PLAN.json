@@ -320,8 +320,8 @@
       "npx vitest run passes",
       "All assertions verify schema"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added transformListing unit tests covering schema mapping, image/category extraction, availability state, and safe defaults"
   },
   {
     "id": "P019",
@@ -340,8 +340,8 @@
       "Cache.get returns null after TTL",
       "Cache.get returns value before TTL"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added in-memory Cache class with configurable TTL and expiry-aware get/set behaviour"
   },
   {
     "id": "P020",

@@ -66,7 +66,7 @@ Legacy Hugo site with separate Cloudflare Worker fetching Square API data. Refac
 **Acceptance Criteria:**
 - Carousel navigable via keyboard (arrow keys)
 - Images lazy-load for performance
-- Sold out products visually distinct (greyed out/badge)
+- [x] Sold out products visually distinct (greyed out/badge)
 - Categories in nav are clickable, filter to category pages
 - If `/api/products` fails, display user-friendly error
 

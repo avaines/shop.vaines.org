@@ -645,8 +645,8 @@
       "Each product has image, name, description",
       "CSS classes applied"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Moved homepage product rendering into static/js/products.js with product-grid/product-card class usage and h3/p content structure"
   },
   {
     "id": "P036",
@@ -664,8 +664,8 @@
       "Clicking opens Etsy in new tab",
       "Button styled visibly"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: View on Etsy anchor already rendered per product with secure new-tab attrs; added dedicated .etsy-link button styling in shared CSS"
   },
   {
     "id": "P037",
@@ -683,8 +683,8 @@
       "Sold out products visually distinct",
       "CSS classes applied correctly"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added availability badge rendering and styles with distinct in-stock/sold-out states plus greyscale sold-out product imagery"
   },
   {
     "id": "P038",
@@ -702,8 +702,8 @@
       "Carousel container created for multi-image products",
       "Prev/next buttons present"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added basic carousel structure with multi-image container, prev/next controls, first-image default, and current-index state marker"
   },
   {
     "id": "P039",

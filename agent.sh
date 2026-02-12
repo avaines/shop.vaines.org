@@ -1,11 +1,12 @@
 #!/usr/bin/env zsh
 # agent.sh
-# Usage: ./agent.sh [iterations]
+# Usage: ./agent.sh [tasks] [iterations]
 # Set AGENT env var to switch AI: codex (default), copilot, or claude
 
 set -euo pipefail
 
-iterations="${1:-1}"
+num_tasks="${1:-1}"
+iterations="${2:-1}"
 AGENT="${AGENT:-codex}"
 
 plan_file="docs/PLAN.json"
@@ -39,7 +40,6 @@ Task: \
   - commands run \
   - results \
   - next failing $plan_file item \
-- Make a git commit of that feature. \
 
 Constraints: \
 - No scope expansion beyond the selected unit. \
@@ -50,7 +50,7 @@ Output: \
 - Exact commands to run \
 - Status: COMPLETE if the unit passed, otherwise FAILED with what to fix. \
 
-ONLY WORK ON A SINGLE FEATURE. \
+ONLY WORK ON $num_tasks FEATURE(S). \
 If, while implementing the feature, you notice that all work \
 is complete, output <promise>COMPLETE</promise>.
 EOF

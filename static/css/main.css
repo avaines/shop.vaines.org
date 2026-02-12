@@ -5,6 +5,7 @@
 }
 
 .product-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   border: 1px solid #d9d9d9;
@@ -20,6 +21,31 @@
   max-width: 100%;
   height: 240px;
   object-fit: cover;
+}
+
+.product-carousel {
+  position: relative;
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: rgba(17, 24, 39, 0.8);
+  color: #fff;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.carousel-prev {
+  left: 10px;
+}
+
+.carousel-next {
+  right: 10px;
 }
 
 .product-info {
@@ -38,6 +64,55 @@
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+}
+
+.badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  z-index: 1;
+}
+
+.badge-available {
+  color: #065f46;
+  background: #d1fae5;
+}
+
+.badge-sold-out {
+  color: #7f1d1d;
+  background: #fee2e2;
+}
+
+.product-card-sold-out {
+  opacity: 0.9;
+}
+
+.product-card-sold-out .product-image {
+  filter: grayscale(100%);
+}
+
+.product-footer {
+  margin-top: 12px;
+}
+
+.etsy-link {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #0f766e;
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.etsy-link:hover,
+.etsy-link:focus-visible {
+  background: #115e59;
 }
 
 @media (max-width: 768px) {

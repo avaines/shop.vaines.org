@@ -632,3 +632,120 @@ rg -n "\\.product-card|\\.product-image|\\.product-name|\\.product-description|b
 
 **Next failing docs/PLAN.json item:**
 - `P035` — Update products.js to apply grid classes
+
+### 2026-02-12 – [P035] Update products.js to apply grid classes
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Extracted homepage product rendering into `static/js/products.js` and ensured grid/card classes are applied by the script  
+**Outcome:** Success  
+**Notes:** Scoped strictly to P035 only
+
+**What changed:**
+- Created `static/js/products.js` with `/api/products` fetch and product-card rendering
+- Updated `layouts/index.html` to load `/js/products.js` via script tag and keep `#products` as `.product-grid`
+- Updated `docs/PLAN.json` to mark `P035` as passed
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+rg -n "id=\"products\" class=\"product-grid\"|<script src=\"/js/products.js\" defer></script>" layouts/index.html
+rg -n "<div class=\"product-card\">|class=\"product-image\"|<h3 class=\"product-name\">|<p class=\"product-description\">" static/js/products.js
+```
+
+**Results:**
+- `npm test`: pass (7 files, 13 tests)
+- `npm run lint`: pass
+- `hugo`: pass (existing taxonomy layout warning remains unrelated to P035)
+- Targeted rendering checks: pass (`.product-grid` container, script include, and product card/image/name/description markup present)
+
+**Next failing docs/PLAN.json item:**
+- `P036` — Add View on Etsy button to product cards
+
+### 2026-02-12 – [P037] Add product availability badge
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Added availability badge rendering and sold-out visual treatment for product cards  
+**Outcome:** Success  
+**Notes:** Scoped strictly to P037 only; no additional feature scope taken
+
+**What changed:**
+- Updated `static/js/products.js` to render `<span class="badge ...">` with `In Stock`/`Sold Out` text from `product.available`
+- Updated `static/js/products.js` to add `product-card-sold-out` class when unavailable
+- Updated `static/css/main.css` with positioned badge styles and separate `.badge-available`/`.badge-sold-out` appearances
+- Updated `static/css/main.css` to greyscale sold-out product images via `.product-card-sold-out .product-image`
+- Updated `docs/PLAN.json` to mark `P037` as passed
+- Updated `docs/FEATURES.md` to tick the sold-out visual distinction acceptance criterion
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+```
+
+**Results:**
+- `npm test`: pass (7 files, 13 tests)
+- `npm run lint`: pass
+- `hugo`: pass (existing taxonomy layout warning remains unrelated to P037)
+
+**Next failing docs/PLAN.json item:**
+- `P036` — Add View on Etsy button to product cards
+
+### 2026-02-12 – [P036] Add View on Etsy button to product cards
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Completed Etsy CTA implementation verification and added explicit shared CSS styling for the button  
+**Outcome:** Success  
+**Notes:** Scoped strictly to P036 only
+
+**What changed:**
+- Updated `static/css/main.css` to style `.etsy-link` as a visible button and add `.product-footer` spacing
+- Updated `docs/PLAN.json` to mark `P036` as passed with completion notes
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+rg -n "View on Etsy|href=\"\$\{product\.etsyUrl\}\"|target=\"_blank\"|rel=\"noopener\"" static/js/products.js
+rg -n "\.etsy-link|\.product-footer" static/css/main.css
+```
+
+**Results:**
+- `npm test`: pass (7 files, 13 tests)
+- `npm run lint`: pass
+- `hugo`: pass (existing taxonomy layout warning remains unrelated to P036)
+- Targeted checks: pass (`View on Etsy` link, `target="_blank"`, `rel="noopener"`, and button CSS selectors present)
+
+**Next failing docs/PLAN.json item:**
+- `P038` — Implement basic image carousel structure
+
+### 2026-02-12 – [P038] Implement basic image carousel structure
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Added a basic multi-image carousel structure for product cards, including prev/next controls and initial index state  
+**Outcome:** Success  
+**Notes:** Scoped strictly to P038; no carousel navigation logic added
+
+**What changed:**
+- Created `static/js/carousel.js` with `createProductImageMarkup(product)`
+- Updated `static/js/products.js` to use the carousel markup helper for product images
+- Updated `layouts/index.html` to load `products.js` as an ES module
+- Updated `static/css/main.css` with basic carousel container/button styles
+- Updated `docs/PLAN.json` to mark `P038` as passed
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+test -f static/js/carousel.js && echo 'carousel.js exists'
+rg -n "createProductImageMarkup|product-carousel|data-current-index=\"0\"|carousel-prev|carousel-next|images.length <= 1" static/js/carousel.js static/js/products.js
+```
+
+**Results:**
+- `npm test`: pass (7 files, 13 tests)
+- `npm run lint`: pass
+- `hugo`: pass (existing taxonomy layout warning remains unrelated to P038)
+- Targeted P038 checks: pass (`carousel.js` exists, carousel container and prev/next controls present, index initialised to `0`)
+
+**Next failing docs/PLAN.json item:**
+- `P039` — Add carousel navigation logic

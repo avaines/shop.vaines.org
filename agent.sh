@@ -1,12 +1,12 @@
 #!/usr/bin/env zsh
 # agent.sh
 # Usage: ./agent.sh [iterations]
-# Note: Set AUTO_ALLOW="--allow-all-tools" to let copilot auto-run tools (unsafe).
+# Set AGENT env var to switch AI: codex (default), copilot, or claude
 
 set -euo pipefail
 
 iterations="${1:-1}"
-AUTO_ALLOW="${AUTO_ALLOW:-}"   # e.g. "--allow-all-tools" to disable interactive confirmations
+AGENT="${AGENT:-codex}"
 
 plan_file="docs/PLAN.json"
 features_file="docs/FEATURES.md"
@@ -15,7 +15,7 @@ progress_log_file="docs/LOG.md"
 
 tmp_result="$(mktemp agent_result.XXXXXX)"
 
-if ! [[ "$iterations" =~ '^[0-9]+$' ]] || [[ "$iterations" -lt 1 ]]; then
+if ! [[ "$iterations" =~ ^[0-9]+$ ]] || [[ "$iterations" -lt 1 ]]; then
   echo "Usage: $0 [iterations]" >&2
   exit 2
 fi
@@ -56,14 +56,21 @@ is complete, output <promise>COMPLETE</promise>.
 EOF
 )
 
-  if [[ -n "$AUTO_ALLOW" ]]; then
-    copilot $AUTO_ALLOW -p "$prompt" >| "$tmp_result" 2>&1
-  else
-    copilot -p "$prompt" >| "$tmp_result" 2>&1
-  fi
-
-  result="$(cat "$tmp_result")"
-  printf '%s\n\n' "$result"
+  case "$AGENT" in
+    codex)
+      codex exec "$prompt" | tee "$tmp_result"
+      ;;
+    copilot)
+      copilot -p "$prompt" --allow-all-tools | tee "$tmp_result"
+      ;;
+    claude)
+      claude "$prompt" | tee "$tmp_result"
+      ;;
+    *)
+      echo "Unknown AGENT: $AGENT (use codex, copilot, or claude)" >&2
+      exit 1
+      ;;
+  esac
 
   if grep -q "<promise>COMPLETE</promise>" "$tmp_result"; then
     echo "PLAN complete, exiting." >&2

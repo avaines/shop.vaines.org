@@ -279,8 +279,8 @@
       "Exports fetchActiveListings",
       "Function accepts shop_id and api_key params"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added Etsy API client module with fetchActiveListings(shop_id, api_key) calling Etsy v3 active listings endpoint"
   },
   {
     "id": "P017",

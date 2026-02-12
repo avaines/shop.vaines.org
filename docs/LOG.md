@@ -89,3 +89,32 @@ curl http://localhost:8788/              # ✓ Homepage loads with products
 **Notes:** 
 
 -->
+
+### 2026-02-12 – [P016] Implement Etsy API client module
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Added Etsy client module for active listings and validated project checks  
+**Outcome:** Success  
+**Notes:** Kept scope to P016 only; no endpoint wiring changes
+
+**What changed:**
+- Created `functions/lib/etsy.js`
+- Updated `docs/PLAN.json` to mark `P016` as passed
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+node -e "import('./functions/lib/etsy.js').then(async (m) => { const out = await m.fetchActiveListings('123','k', async () => ({ ok: true, json: async () => ({ results: [] }) })); console.log(JSON.stringify(out)); }).catch((e) => { console.error(e); process.exit(1); });"
+wrangler pages dev ./public --port 8788 --compatibility-date=2024-01-01 (smoke attempt)
+```
+
+**Results:**
+- `npm test`: pass
+- `npm run lint`: pass
+- `hugo`: pass
+- Direct module invocation: pass (`{"results":[]}`)
+- Wrangler smoke attempt: blocked by local sandbox constraints
+
+**Next failing docs/PLAN.json item:**
+- `P017` — Transform Etsy listing to product schema

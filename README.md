@@ -41,8 +41,8 @@ Edit `.env` and add your credentials (not required for stub implementation):
 
 ```env
 ETSY_API_KEY=your_api_key_here
+ETSY_API_SHARED_SECRET=your_api_shared_secret_here
 ETSY_SHOP_ID=your_shop_id_here
-REFRESH_SECRET=your_random_secret_here
 ```
 
 ### 3. Run Development Server

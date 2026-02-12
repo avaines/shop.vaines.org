@@ -118,3 +118,30 @@ wrangler pages dev ./public --port 8788 --compatibility-date=2024-01-01 (smoke a
 
 **Next failing docs/PLAN.json item:**
 - `P017` — Transform Etsy listing to product schema
+
+### 2026-02-12 – [P017] Transform Etsy listing to product schema
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Implemented listing transform module and validated schema mapping behaviour  
+**Outcome:** Success  
+**Notes:** Kept scope to P017 only; no endpoint wiring changes
+
+**What changed:**
+- Created `functions/lib/transform.js`
+- Updated `docs/PLAN.json` to mark `P017` as passed
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+node -e "import('./functions/lib/transform.js').then((m) => { const out = m.transformListing({ listing_id: 12345, title: 'Test item', description: 'Desc', state: 'active', taxonomy_path: ['Jewellery', 'Necklaces'], images: [{ url_fullxfull: 'https://i.etsystatic.com/a.jpg' }, { url_570xN: 'https://i.etsystatic.com/b.jpg' }] }); console.log(JSON.stringify(out)); }).catch((e) => { console.error(e); process.exit(1); });"
+```
+
+**Results:**
+- `npm test`: pass
+- `npm run lint`: pass
+- `hugo`: pass
+- Direct module invocation: pass (returned full product schema with mapped categories and image URLs)
+
+**Next failing docs/PLAN.json item:**
+- `P018` — Write unit tests for Etsy transform logic

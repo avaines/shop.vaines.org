@@ -300,8 +300,8 @@
       "Function returns object with correct schema",
       "Categories array populated from taxonomy"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added transformListing(listing) to map Etsy listing fields, image URLs, taxonomy categories, availability, and etsyUrl into product schema"
   },
   {
     "id": "P018",

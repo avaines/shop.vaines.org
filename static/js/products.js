@@ -1,14 +1,51 @@
-import { createProductImageMarkup } from "./carousel.js";
+import { createProductImageMarkup, initProductCarousels } from "./carousel.js";
 
-async function loadProducts() {
-  const container = document.getElementById("products");
+export function slugifyCategory(category) {
+  return String(category)
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function renderCategoryNav(products, doc = document) {
+  const categoryNav = doc.getElementById("category-nav");
+
+  if (!categoryNav) {
+    return;
+  }
+
+  const uniqueCategories = [...new Set(
+    products
+      .flatMap((product) => (Array.isArray(product.categories) ? product.categories : []))
+      .map((category) => String(category).trim())
+      .filter((category) => category.length > 0),
+  )];
+
+  const links = [
+    '<a class="category-link is-active" href="/">All Products</a>',
+    ...uniqueCategories.map((category) => {
+      const slug = slugifyCategory(category);
+      return `<a class="category-link" href="/categories/${slug}/">${category}</a>`;
+    }),
+  ];
+
+  categoryNav.innerHTML = links.join("");
+}
+
+export function getProductsLoadErrorHtml() {
+  return '<div class="error">Unable to load products. Please try again later.</div>';
+}
+
+export async function loadProducts({ doc = document, fetchFn = fetch, logger = console } = {}) {
+  const container = doc.getElementById("products");
 
   if (!container) {
     return;
   }
 
   try {
-    const response = await fetch("/api/products");
+    const response = await fetchFn("/api/products");
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -18,8 +55,11 @@ async function loadProducts() {
 
     if (!Array.isArray(products) || products.length === 0) {
       container.innerHTML = '<div class="error">No products available</div>';
+      renderCategoryNav([], doc);
       return;
     }
+
+    renderCategoryNav(products, doc);
 
     container.innerHTML = products
       .map((product) => {
@@ -47,14 +87,18 @@ async function loadProducts() {
         `;
       })
       .join("");
+
+    initProductCarousels(container);
   } catch (error) {
-    console.error("Failed to load products:", error);
-    container.innerHTML = "<div class=\"error\">Failed to load products. Please try again later.</div>";
+    logger.error("Failed to load products:", error);
+    container.innerHTML = getProductsLoadErrorHtml();
   }
 }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", loadProducts);
-} else {
-  loadProducts();
+if (typeof document !== "undefined") {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", loadProducts);
+  } else {
+    loadProducts();
+  }
 }

@@ -30,6 +30,7 @@ export function transformListing(listing) {
   const categories = Array.isArray(listing?.taxonomy_path)
     ? listing.taxonomy_path.filter((category) => typeof category === 'string' && category.length > 0)
     : [];
+  const normalisedCategories = categories.length > 0 ? categories : ['Uncategorised'];
 
   return {
     id: listingId,
@@ -37,7 +38,7 @@ export function transformListing(listing) {
     description: listing?.description ?? '',
     images,
     available: listing?.state === 'active',
-    categories,
+    categories: normalisedCategories,
     etsyUrl: `https://www.etsy.com/listing/${listingId}`,
   };
 }

@@ -69,8 +69,17 @@ describe('transformListing', () => {
       description: '',
       images: [],
       available: false,
-      categories: [],
+      categories: ['Uncategorised'],
       etsyUrl: 'https://www.etsy.com/listing/',
     });
+  });
+
+  it('defaults categories to Uncategorised when taxonomy has no valid values', () => {
+    const result = transformListing({
+      listing_id: 7,
+      taxonomy_path: ['', null, 0],
+    });
+
+    expect(result.categories).toEqual(['Uncategorised']);
   });
 });

@@ -93,6 +93,12 @@ Run tests in watch mode:
 npm run test:watch
 ```
 
+Run local smoke tests (requires the local dev server to be running on `http://127.0.0.1:8788`):
+
+```bash
+npm run test:smoke
+```
+
 ## Linting
 
 Check code quality:
@@ -109,6 +115,7 @@ npm run lint
 2. Configure build settings:
    - **Build command:** `npm run build`
    - **Build output directory:** `public`
+   - **Functions directory:** auto-detected from `functions/` (no separate setting required)
 3. Add environment variables in the Cloudflare dashboard:
    - `ETSY_API_KEY`
    - `ETSY_SHOP_ID`

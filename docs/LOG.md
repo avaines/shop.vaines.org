@@ -749,3 +749,376 @@ rg -n "createProductImageMarkup|product-carousel|data-current-index=\"0\"|carous
 
 **Next failing docs/PLAN.json item:**
 - `P039` — Add carousel navigation logic
+
+### 2026-02-12 – [P039] Add carousel navigation logic
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Implemented carousel prev/next navigation handlers with wrap-around behaviour for multi-image product cards  
+**Outcome:** Success  
+**Notes:** Scoped strictly to P039 only; keyboard navigation remains for P040
+
+**What changed:**
+- Updated `static/js/carousel.js` with delegated click handlers for `.carousel-next` and `.carousel-prev`
+- Updated `static/js/carousel.js` to decode image lists, update displayed image `src`, and wrap index in both directions
+- Updated `static/js/products.js` to initialise carousel handlers after rendering products
+- Updated `docs/PLAN.json` to mark `P039` as passed
+- Updated `docs/FEATURES.md` to tick `Image carousel/slider for product images (prev/next buttons)`
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+```
+
+**Results:**
+- `npm test`: pass (7 files, 13 tests)
+- `npm run lint`: pass
+- `hugo`: pass (existing taxonomy layout warning remains unrelated to P039)
+
+**Next failing docs/PLAN.json item:**
+- `P040` — Add keyboard navigation to carousel
+
+### 2026-02-12 – [P040] Add keyboard navigation to carousel
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Added keyboard navigation for product image carousels and focused carousel containers on click  
+**Outcome:** Success  
+**Notes:** Scoped strictly to P040 only
+
+**What changed:**
+- Updated `static/js/carousel.js` to add `tabindex="0"` on `.product-carousel`
+- Updated `static/js/carousel.js` with delegated `keydown` handling for `ArrowRight`/`ArrowLeft`
+- Updated `static/js/carousel.js` to focus carousel containers on click before navigation actions
+- Updated `docs/PLAN.json` to mark `P040` as passed
+- Updated `docs/FEATURES.md` to tick keyboard carousel acceptance criterion
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+node -e "import('./static/js/carousel.js').then(({ initProductCarousels }) => { const listeners = {}; const root = { addEventListener: (type, handler) => { listeners[type] = handler; } }; const image = { src: 'a.jpg', dataset: { images: encodeURIComponent(JSON.stringify(['a.jpg','b.jpg','c.jpg'])) } }; const carousel = { dataset: { currentIndex: '0' }, focusCalled: false, querySelector: (sel) => sel === '.carousel-image' ? image : null, focus: () => { carousel.focusCalled = true; } }; const target = { closest: (sel) => sel === '.product-carousel' ? carousel : null }; initProductCarousels(root); listeners.click({ target }); if (!carousel.focusCalled) throw new Error('carousel not focused on click'); listeners.keydown({ key: 'ArrowRight', target, preventDefault: () => {} }); if (carousel.dataset.currentIndex !== '1' || image.src !== 'b.jpg') throw new Error('ArrowRight failed'); listeners.keydown({ key: 'ArrowLeft', target, preventDefault: () => {} }); if (carousel.dataset.currentIndex !== '0' || image.src !== 'a.jpg') throw new Error('ArrowLeft failed'); console.log('p040-keyboard-ok'); }).catch((e) => { console.error(e); process.exit(1); });"
+```
+
+**Results:**
+- `npm test`: pass (7 files, 13 tests)
+- `npm run lint`: pass
+- `hugo`: pass (existing taxonomy layout warning remains unrelated to P040)
+- Targeted keyboard smoke check: pass (`p040-keyboard-ok`)
+
+**Next failing docs/PLAN.json item:**
+- `P041` — Add lazy loading to product images
+
+### 2026-02-12 – [P041] Add lazy loading to product images
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Completed image lazy-loading unit by ensuring product images use native lazy loading and adding a visible loading-state placeholder that clears on load/error  
+**Outcome:** Success  
+**Notes:** Scoped strictly to P041 only
+
+**What changed:**
+- Updated `static/js/carousel.js` to ensure all product images include `loading="lazy"`
+- Updated `static/js/carousel.js` to add `product-image-loading` placeholder class and load/error cleanup handlers
+- Updated `static/js/carousel.js` to re-apply loading-state class when carousel image source changes
+- Updated `static/css/main.css` with `.product-image-loading` placeholder animation styles
+- Updated `docs/PLAN.json` to mark `P041` as passed
+- Updated `docs/FEATURES.md` to tick `Images lazy-load for performance`
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+rg -n "loading=\"lazy\"|product-image-loading|addEventListener\(\"load\"|addEventListener\(\"error\"" static/js/carousel.js
+rg -n "\[x\] Images lazy-load for performance" docs/FEATURES.md
+```
+
+**Results:**
+- `npm test`: pass (7 files, 13 tests)
+- `npm run lint`: pass
+- `hugo`: pass (existing taxonomy layout warning remains unrelated to P041)
+- Targeted lazy-loading checks: pass
+
+**Next failing docs/PLAN.json item:**
+- `P042` — Implement dynamic category menu population
+
+### 2026-02-12 – [P042] Implement dynamic category menu population
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Added dynamic category navigation population from loaded product data on the homepage  
+**Outcome:** Success  
+**Notes:** Scoped strictly to P042 only; no taxonomy page implementation changes
+
+**What changed:**
+- Updated `static/js/products.js` to extract unique categories from product payloads
+- Updated `static/js/products.js` to render category links into `#category-nav`
+- Updated `static/js/products.js` to add `All Products` link and category links at `/categories/<slug>/`
+- Updated `docs/PLAN.json` to mark `P042` as passed
+- Updated `docs/FEATURES.md` to tick `Navigation auto-populates from product categories`
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+rg -n "renderCategoryNav|category-link|/categories/\\$\\{slug\\}/|All Products" static/js/products.js
+```
+
+**Results:**
+- `npm test`: pass (7 files, 13 tests)
+- `npm run lint`: pass
+- `hugo`: pass (existing taxonomy layout warning remains unrelated to P042)
+- Targeted category-nav checks: pass
+
+**Next failing docs/PLAN.json item:**
+- `P043` — Create category taxonomy layout
+
+### 2026-02-12 – [P043] Create category taxonomy layout
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Added Hugo taxonomy page rendering for category routes with client-side product filtering by category slug  
+**Outcome:** Success  
+**Notes:** Scoped strictly to P043 only
+
+**What changed:**
+- Created `layouts/_default/taxonomy.html` with category heading and product grid container
+- Created `static/js/category-page.js` to:
+  - read category slug from `/categories/<slug>/`
+  - fetch `/api/products`
+  - filter products to the current category
+  - render filtered cards and heading
+- Created `tests/category-page.test.js` for category route parsing and filtering behaviour
+- Created `static/_redirects` with `/categories/*   /categories/   200` so slug routes render via taxonomy page
+- Updated `static/css/main.css` with shared taxonomy-page styles (`.container`, `.category-heading`, `.loading`, `.error`, `.product-categories`)
+- Updated `docs/PLAN.json` to mark `P043` as passed
+- Updated `docs/FEATURES.md` to tick dynamic category pages and category-link acceptance
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+test -f layouts/_default/taxonomy.html && echo 'taxonomy-layout-exists'
+find public/categories -maxdepth 3 -type f | sort
+cat public/_redirects
+```
+
+**Results:**
+- `npm test`: pass (8 files, 15 tests)
+- `npm run lint`: pass
+- `hugo`: pass (taxonomy warning removed)
+- Taxonomy validation checks: pass (`public/categories/index.html` generated; rewrite present for `/categories/*`)
+
+**Next failing docs/PLAN.json item:**
+- `P044` — Handle Uncategorised products
+
+### 2026-02-12 – [P044] Handle Uncategorised products
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Ensured products with missing/invalid Etsy taxonomy are assigned the default `Uncategorised` category and verified uncategorised category filtering  
+**Outcome:** Success  
+**Notes:** Scoped strictly to P044 only
+
+**What changed:**
+- Updated `functions/lib/transform.js` to default `categories` to `['Uncategorised']` when taxonomy has no valid values
+- Updated `functions/lib/transform.test.js` to assert the Uncategorised default in safe-default and invalid-taxonomy cases
+- Updated `tests/category-page.test.js` to assert filtering for `/categories/uncategorised`
+- Updated `docs/PLAN.json` to mark `P044` as passed
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+```
+
+**Results:**
+- `npm test`: pass (8 files, 16 tests)
+- `npm run lint`: pass
+- `hugo`: pass
+
+**Next failing docs/PLAN.json item:**
+- `P045` — Add error handling UI for failed API calls
+
+### 2026-02-12 – [P045] Add error handling UI for failed API calls
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Finalised homepage API failure handling with explicit user-facing error copy and test coverage for simulated network failures  
+**Outcome:** Success  
+**Notes:** Scoped strictly to P045 only
+
+**What changed:**
+- Updated `static/js/products.js` to:
+  - keep fetch logic in `try/catch`
+  - show `Unable to load products. Please try again later.` in `#products` on failure
+  - log fetch failures via `logger.error` (defaulting to `console.error`)
+  - add safe browser-only bootstrapping guard and export helpers for testability
+- Added `tests/products-page.test.js` to simulate a rejected API fetch and assert:
+  - user-friendly error message is rendered
+  - error details are logged
+- Updated `docs/PLAN.json` to mark `P045` as passed
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+```
+
+**Results:**
+- `npm test`: pass (9 files, 17 tests)
+- `npm run lint`: pass
+- `hugo`: pass
+
+**Next failing docs/PLAN.json item:**
+- `P046` — Style navigation header responsively
+
+### 2026-02-12 – [P046] Style navigation header responsively
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Added responsive header and category navigation styling for desktop and mobile layouts  
+**Outcome:** Success  
+**Notes:** Scoped strictly to P046 only
+
+**What changed:**
+- Updated `static/css/main.css` with dedicated header styles:
+  - horizontal primary nav on desktop
+  - stacked primary nav on mobile
+  - touch-friendly nav/category link targets
+  - wrapped category nav chip layout
+- Updated `docs/PLAN.json` to mark `P046` as passed
+- Updated `docs/FEATURES.md` to tick `Responsive navigation header with category menu`
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+rg -n '\\.site-nav \\{|flex-direction: column|#category-nav|min-height: 40px|min-height: 42px|@media \\(max-width: 768px\\)' static/css/main.css
+```
+
+**Results:**
+- `npm test`: pass (9 files, 17 tests)
+- `npm run lint`: pass
+- `hugo`: pass
+- Responsive-nav CSS validation checks: pass
+
+**Next failing docs/PLAN.json item:**
+- `P047` — Document deployment to Cloudflare Pages
+
+### 2026-02-12 – [P047] Document deployment to Cloudflare Pages
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Completed deployment documentation for Cloudflare Pages in README, including explicit note that Functions are auto-detected from `functions/`  
+**Outcome:** Success  
+**Notes:** Scoped strictly to P047 only
+
+**What changed:**
+- Updated `README.md` deployment steps with: `Functions directory: auto-detected from functions/ (no separate setting required)`
+- Updated `docs/PLAN.json` to mark `P047` as passed
+
+**Commands run:**
+```bash
+rg -n "^## Deployment|^### Cloudflare Pages" README.md
+rg -n "ETSY_API_KEY|ETSY_SHOP_ID|ETSY_API_SHARED_SECRET" README.md
+rg -n "Build command|Build output directory|Functions directory|functions/" README.md
+```
+
+**Results:**
+- Deployment section present in README
+- Required environment variables listed in deployment instructions
+- Build command, output directory, and Functions auto-detection documented
+
+**Next failing docs/PLAN.json item:**
+- `P048` — Add smoke test script for local verification
+
+### 2026-02-12 – [P048] Add smoke test script for local verification
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Implemented an opt-in local smoke test for API and homepage checks, added npm script wiring, and documented execution in README  
+**Outcome:** Partial (validation blocked by sandbox networking permissions)  
+**Notes:** Scoped strictly to P048 only
+
+**What changed:**
+- Added `tests/smoke.test.js` covering:
+  - `GET /api/products` returns HTTP 200 and a JSON array
+  - `GET /` returns HTTP 200 and contains `id="products"`
+- Updated `package.json` with `test:smoke` script:
+  - `RUN_SMOKE_TESTS=1 vitest run tests/smoke.test.js`
+- Updated `README.md` with smoke test run instructions
+- Added `ADR-004` to `docs/DECISIONS.md` to keep smoke tests opt-in
+- Updated `docs/PLAN.json` notes for `P048` with implementation and validation blocker details
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+npm run build
+ETSY_API_KEY=dummy ETSY_SHOP_ID=dummy ETSY_API_SHARED_SECRET=dummy npx wrangler pages dev ./public --port 8788 --compatibility-date=2024-01-01
+npm run test:smoke
+```
+
+**Results:**
+- `npm test`: pass (9 test files passed, 1 skipped; smoke tests skipped by default)
+- `npm run lint`: pass
+- `hugo`: pass
+- Wrangler smoke host startup: failed in sandbox (`listen EPERM`)
+- `npm run test:smoke`: failed in sandbox (`connect EPERM 127.0.0.1:8788`)
+
+**Next failing docs/PLAN.json item:**
+- `P048` — Add smoke test script for local verification (requires running smoke checks outside sandbox)
+
+### 2026-02-12 – [P049] Verify test coverage meets 70% threshold
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Added project coverage command and threshold configuration for function logic, then attempted coverage validation  
+**Outcome:** Blocked (coverage provider unavailable offline)  
+**Notes:** Scoped strictly to P049 only
+
+**What changed:**
+- Added `vitest.config.js` with coverage thresholds set to 70% for lines/functions/branches/statements and coverage include scoped to `functions/**/*.js`
+- Updated `package.json` with `test:coverage` script (`vitest run --coverage`)
+- Updated `docs/PLAN.json` P049 notes with validation blocker details (offline dependency resolution failure)
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+npm run test:coverage
+npx vitest run --coverage
+npx vitest run --coverage --coverage.provider=istanbul
+npm install --save-dev @vitest/coverage-v8
+```
+
+**Results:**
+- `npm test`: pass (9 files passed, 1 skipped)
+- `npm run lint`: pass
+- `hugo`: pass
+- Coverage execution: failed (`Cannot find dependency '@vitest/coverage-v8'`)
+- Coverage provider install: failed (`ENOTFOUND registry.npmjs.org` in current sandbox)
+
+**Next failing docs/PLAN.json item:**
+- `P049` — Verify test coverage meets 70% threshold (requires coverage provider package installation)
+
+### 2026-02-12 – [P050] Run full quality gate before merge
+**Agent:** Implementer + Test/QA + Scribe  
+**Action:** Executed the full pre-merge quality gate checklist and recorded sandbox blockers for local runtime verification  
+**Outcome:** Failed (partially validated; manual runtime checks blocked by sandbox EPERM)  
+**Notes:** Scoped strictly to P050 only
+
+**What changed:**
+- Updated `docs/PLAN.json` `P050` notes with command evidence and blocker details
+
+**Commands run:**
+```bash
+npm test
+npm run lint
+hugo
+ETSY_API_KEY=dummy ETSY_SHOP_ID=dummy ETSY_API_SHARED_SECRET=testsecret npx wrangler pages dev ./public --port 8788 --compatibility-date=2024-01-01
+curl "http://127.0.0.1:8788/api/products?refresh=testsecret"
+curl "http://127.0.0.1:8788/"
+rg -n "npm test|npm run lint|hugo|wrangler pages dev|/api/products|refresh=|ETSY_API_SHARED_SECRET|test:smoke|test:coverage" README.md
+```
+
+**Results:**
+- `npm test`: pass (9 files passed, 1 skipped; 17 tests passed, 2 skipped)
+- `npm run lint`: pass
+- `hugo`: pass
+- `wrangler pages dev`: failed in sandbox (`listen EPERM` and related permission errors)
+- Local endpoint checks with `curl`: failed (`connect EPERM` / could not connect to `127.0.0.1:8788`)
+- README walkthrough validation: pass (required quality-gate commands/endpoints documented)
+
+**Next failing docs/PLAN.json item:**
+- `P049` — Verify test coverage meets 70% threshold

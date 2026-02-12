@@ -5,8 +5,7 @@
 
 set -euo pipefail
 
-num_tasks="${1:-1}"
-iterations="${2:-1}"
+iterations="${1:-1}"
 AGENT="${AGENT:-codex}"
 
 plan_file="docs/PLAN.json"
@@ -50,7 +49,7 @@ Output: \
 - Exact commands to run \
 - Status: COMPLETE if the unit passed, otherwise FAILED with what to fix. \
 
-ONLY WORK ON $num_tasks FEATURE(S). \
+ONLY WORK ON A SINGLE FEATURE. \
 If, while implementing the feature, you notice that all work \
 is complete, output <promise>COMPLETE</promise>.
 EOF

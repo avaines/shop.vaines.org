@@ -35,16 +35,16 @@ Legacy Hugo site with separate Cloudflare Worker fetching Square API data. Refac
 
 - [x] Homepage displays product grid (4 columns desktop, 2 mobile)
 - [ ] Individual product detail pages (`/products/<slug>`)
-- [ ] Dynamic category pages (`/categories/<category-slug>`)
+- [x] Dynamic category pages (`/categories/<category-slug>`)
 - [x] About page (`/about`)
 - [x] Contact page (`/contact`) with Formspree form
-- [ ] Responsive navigation header with category menu
+- [x] Responsive navigation header with category menu
 - [x] Footer with basic links
 
 **Acceptance Criteria:**
 - [ ] `config.toml` contains `productJsonUrl = "/api/products"`
 - [x] Products fetch data from Pages Function on page load
-- [ ] Navigation auto-populates from product categories
+- [x] Navigation auto-populates from product categories
 - [x] "Uncategorised" default category if product has no categories
 - [x] All pages mobile-responsive (viewport meta tag)
 - [x] Contact form posts to Formspree endpoint
@@ -56,7 +56,7 @@ Legacy Hugo site with separate Cloudflare Worker fetching Square API data. Refac
 **Status:** In Progress (Basic Display Complete)  
 **Priority:** P0 (Blocker)
 
-- [ ] Image carousel/slider for product images (prev/next buttons)
+- [x] Image carousel/slider for product images (prev/next buttons)
 - [x] "View on Etsy" button linking to `etsyUrl`
 - [x] Product availability badge (In Stock / Sold Out)
 - [x] Product description rendered as HTML (handle line breaks)
@@ -64,10 +64,10 @@ Legacy Hugo site with separate Cloudflare Worker fetching Square API data. Refac
 - [x] Graceful fallback if API unavailable (show cached/static message)
 
 **Acceptance Criteria:**
-- Carousel navigable via keyboard (arrow keys)
-- Images lazy-load for performance
+- [x] Carousel navigable via keyboard (arrow keys)
+- [x] Images lazy-load for performance
 - [x] Sold out products visually distinct (greyed out/badge)
-- Categories in nav are clickable, filter to category pages
+- [x] Categories in nav are clickable, filter to category pages
 - If `/api/products` fails, display user-friendly error
 
 ---

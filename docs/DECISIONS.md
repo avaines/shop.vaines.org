@@ -93,6 +93,30 @@ Keep expired entries in in-memory cache and expose `getStale(key)` for error fal
 
 ---
 
+## ADR-004: Keep local smoke tests opt-in
+**Date:** 2026-02-12  
+**Status:** Accepted
+
+### Context
+Local smoke checks need a running Wrangler Pages dev server and network access on `127.0.0.1:8788`. Running them in every default unit-test execution would create avoidable failures when services are not started.
+
+### Decision
+Add a dedicated `npm run test:smoke` command and gate smoke specs behind `RUN_SMOKE_TESTS=1`.
+
+### Consequences
+**Positive:**
+- `npm test` remains deterministic and fast for unit/integration coverage
+- Smoke checks stay available for local verification before merge
+
+**Negative:**
+- Smoke tests are not executed unless explicitly invoked
+
+**Mitigations:**
+- Document `npm run test:smoke` in README
+- Keep smoke test file in `tests/` so it remains visible in the test suite
+
+---
+
 <!-- Template:
 
 ## ADR-NNN: Title

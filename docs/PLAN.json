@@ -721,8 +721,8 @@
       "Clicking prev shows previous image",
       "Carousel wraps at boundaries"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added carousel prev/next click handling with index wrap-around and image src updates via delegated event listeners"
   },
   {
     "id": "P040",
@@ -738,8 +738,8 @@
       "Arrow keys navigate carousel",
       "Keyboard navigation works when focused"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added delegated ArrowLeft/ArrowRight key handling for focused product carousels and focus-on-click behaviour"
   },
   {
     "id": "P041",
@@ -754,8 +754,8 @@
       "Images have loading='lazy'",
       "Images load as viewport approaches"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Confirmed lazy loading on product images and added image loading-state placeholder styling with load/error cleanup handlers"
   },
   {
     "id": "P042",
@@ -772,8 +772,8 @@
       "Links created for each category",
       "Categories unique"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added dynamic category nav population from unique product categories with All Products and /categories/<slug>/ links"
   },
   {
     "id": "P043",
@@ -790,8 +790,8 @@
       "/categories/<slug> renders",
       "Shows only products in category"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added Hugo taxonomy category page template with client-side category filtering and Cloudflare rewrite for /categories/<slug>/ routing"
   },
   {
     "id": "P044",
@@ -806,8 +806,8 @@
       "Products with no categories show 'Uncategorised'",
       "/categories/uncategorised works"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: transformListing now defaults empty taxonomy categories to Uncategorised, enabling /categories/uncategorised filtering"
   },
   {
     "id": "P045",
@@ -824,8 +824,8 @@
       "Error message user-friendly",
       "Console logs error details"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added tested homepage API error UI showing 'Unable to load products' and logging fetch failures to console"
   },
   {
     "id": "P046",
@@ -842,8 +842,8 @@
       "Nav collapses or stacks on mobile",
       "Touch-friendly on mobile"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: Added responsive header navigation CSS with desktop horizontal layout, mobile stacked nav, touch-friendly link targets, and wrapped category chips"
   },
   {
     "id": "P047",
@@ -862,8 +862,8 @@
       "Environment variables listed",
       "Build settings documented"
     ],
-    "passes": false,
-    "notes": ""
+    "passes": true,
+    "notes": "Completed 2026-02-12: README deployment section now documents Cloudflare Pages Git setup, build settings, required environment variables, and automatic Functions detection"
   },
   {
     "id": "P048",
@@ -884,7 +884,7 @@
       "Documents how to run smoke test"
     ],
     "passes": false,
-    "notes": ""
+    "notes": "Implemented 2026-02-12: Added tests/smoke.test.js, npm run test:smoke, and README instructions. Validation blocked in sandbox because localhost bind/connect is denied (EPERM), so smoke checks require running outside this environment."
   },
   {
     "id": "P049",
@@ -902,7 +902,7 @@
       "Config enforces threshold"
     ],
     "passes": false,
-    "notes": ""
+    "notes": "Attempted 2026-02-12: Added vitest.config.js coverage thresholds (70%) and npm test:coverage script. Validation blocked because coverage provider dependency (@vitest/coverage-v8) is unavailable in the current offline sandbox (ENOTFOUND registry.npmjs.org)."
   },
   {
     "id": "P050",
@@ -924,6 +924,6 @@
       "README walkthrough works"
     ],
     "passes": false,
-    "notes": ""
+    "notes": "Attempted 2026-02-12: `npm test`, `npm run lint`, and `hugo` all pass, and README checks are present. Validation remains blocked in sandbox because Wrangler local runtime and localhost curl checks fail with EPERM (listen/connect), so manual smoke and refresh verification must run outside this environment."
   }
 ]

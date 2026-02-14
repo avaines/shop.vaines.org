@@ -44,7 +44,7 @@ async function syncProducts(env, { forceRefresh = false, refreshFallbackProducts
   try {
     const etsyData = await fetchActiveListings(
       env?.ETSY_SHOP_ID,
-      `${env?.ETSY_API_KEY}:${env?.ETSY_API_SHARED_SECRET}`,
+      env?.ETSY_API_KEY,
     );
     const listings = Array.isArray(etsyData?.results) ? etsyData.results : [];
     const products = listings.map((listing) => transformListing(listing));
@@ -57,7 +57,8 @@ async function syncProducts(env, { forceRefresh = false, refreshFallbackProducts
       products,
     };
   } catch (error) {
-    console.error('Failed to fetch Etsy listings', error);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`Failed to fetch Etsy listings: ${message}`);
 
     const staleProducts = refreshFallbackProducts ?? productCache.getStale(PRODUCT_CACHE_KEY);
 

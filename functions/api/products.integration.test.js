@@ -15,6 +15,11 @@ function makeEtsyResponse() {
         title: 'Ceramic Plant Pot',
         description: 'Hand-thrown and glazed.',
         state: 'active',
+        price: {
+          amount: 3800,
+          divisor: 100,
+          currency_code: 'GBP',
+        },
         taxonomy_path: ['Home & Living', 'Home Decor', 'Planters & Pots'],
         images: [
           { url_fullxfull: 'https://i.etsystatic.com/full.jpg' },
@@ -65,6 +70,11 @@ describe('/api/products integration', () => {
       ],
       available: true,
       categories: ['Home & Living', 'Home Decor', 'Planters & Pots'],
+      price: {
+        amount: 38,
+        currency: 'GBP',
+        display: '£38.00',
+      },
       etsyUrl: 'https://www.etsy.com/listing/987654321',
     });
 

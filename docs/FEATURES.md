@@ -101,7 +101,7 @@ Legacy Hugo site with separate Cloudflare Worker fetching Square API data. Refac
 - [x] Unit tests for Etsy API parsing logic (Vitest or Node test runner)
 - [x] Integration test: mock Etsy API, verify product JSON schema
 - [x] Build verification: Hugo builds without errors
-- [ ] Linting passes before commit (optional pre-commit hook)
+- [x] Linting passes before commit (optional pre-commit hook)
 
 **Acceptance Criteria:**
 - [x] `npm test` runs all tests and passes

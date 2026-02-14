@@ -47,12 +47,14 @@ describe('/api/products refresh handling', () => {
       };
     });
 
-    const standardRequest = new Request('https://example.com/api/products');
+    const firstRefreshRequest = new Request(
+      'https://example.com/api/products?refresh=secret-123',
+    );
     const refreshRequest = new Request(
       'https://example.com/api/products?refresh=secret-123',
     );
 
-    const firstResponse = await onRequest({ request: standardRequest, env: baseEnv });
+    const firstResponse = await onRequest({ request: firstRefreshRequest, env: baseEnv });
     const firstPayload = await firstResponse.json();
 
     const refreshResponse = await onRequest({ request: refreshRequest, env: baseEnv });
@@ -63,5 +65,54 @@ describe('/api/products refresh handling', () => {
     expect(callCount).toBe(2);
     expect(firstPayload[0].id).toBe('1');
     expect(refreshPayload[0].id).toBe('2');
+  });
+
+  it('returns an empty array on refresh when Etsy responds with an empty body', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('', {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    }));
+
+    const refreshRequest = new Request(
+      'https://example.com/api/products?refresh=secret-123',
+    );
+
+    const refreshResponse = await onRequest({ request: refreshRequest, env: baseEnv });
+    const refreshPayload = await refreshResponse.json();
+
+    expect(refreshResponse.status).toBe(200);
+    expect(refreshPayload).toEqual([]);
+  });
+
+  it('returns stale products on refresh when Etsy responds with invalid JSON', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+    fetchSpy.mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ results: [makeListing(1)] }),
+    });
+
+    const firstRefreshRequest = new Request(
+      'https://example.com/api/products?refresh=secret-123',
+    );
+    const refreshRequest = new Request(
+      'https://example.com/api/products?refresh=secret-123',
+    );
+
+    const firstResponse = await onRequest({ request: firstRefreshRequest, env: baseEnv });
+    const firstPayload = await firstResponse.json();
+
+    fetchSpy.mockResolvedValue(new Response('<html>not json</html>', {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    }));
+
+    const refreshResponse = await onRequest({ request: refreshRequest, env: baseEnv });
+    const refreshPayload = await refreshResponse.json();
+
+    expect(firstResponse.status).toBe(200);
+    expect(refreshResponse.status).toBe(200);
+    expect(firstPayload[0].id).toBe('1');
+    expect(refreshPayload).toEqual(firstPayload);
   });
 });

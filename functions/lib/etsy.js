@@ -10,6 +10,11 @@ const ETSY_API_BASE_URL = 'https://openapi.etsy.com/v3/application';
  */
 export async function fetchActiveListings(shop_id, api_key, fetch_impl = fetch) {
   const url = new URL(`${ETSY_API_BASE_URL}/shops/${shop_id}/listings/active`);
+  url.searchParams.set('includes', 'Images');
+  url.searchParams.set(
+    'fields[ListingImage]',
+    'url_fullxfull,url_570xN,url_170x135,url_75x75,url',
+  );
 
   const response = await fetch_impl(url.toString(), {
     method: 'GET',
@@ -22,5 +27,23 @@ export async function fetchActiveListings(shop_id, api_key, fetch_impl = fetch) 
     throw new Error(`Etsy API request failed with status ${response.status}`);
   }
 
-  return response.json();
+  if (response.status === 204) {
+    return { results: [] };
+  }
+
+  if (typeof response.text !== 'function') {
+    return response.json();
+  }
+
+  const payloadText = await response.text();
+
+  if (!payloadText || payloadText.trim().length === 0) {
+    return { results: [] };
+  }
+
+  try {
+    return JSON.parse(payloadText);
+  } catch {
+    throw new Error('Etsy API returned invalid JSON');
+  }
 }

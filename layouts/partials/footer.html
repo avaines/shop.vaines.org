@@ -1,13 +1,28 @@
 <footer class="site-footer">
   <div class="site-footer__inner">
-    <p>&copy; {{ now.Year }} {{ .Site.Title }}. All rights reserved.</p>
+    {{ $footer := .Site.Params.footer }}
+    <div class="footer-brand">
+      <p class="footer-title">{{ with $footer.title }}{{ . }}{{ else }}{{ .Site.Title }}{{ end }}</p>
+      <p class="footer-copy">{{ with $footer.summary }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}</p>
+      <p class="footer-meta">&copy; {{ now.Year }} {{ .Site.Title }}. {{ with $footer.copyright }}{{ . }}{{ else }}All rights reserved.{{ end }}</p>
+    </div>
 
-    <nav aria-label="Footer links">
-      <ul class="footer-links">
-        <li><a href="/privacy/">Privacy</a></li>
-        <li><a href="https://instagram.com/" rel="noopener noreferrer" target="_blank">Instagram</a></li>
-        <li><a href="https://facebook.com/" rel="noopener noreferrer" target="_blank">Facebook</a></li>
-      </ul>
-    </nav>
+    {{ range $group := $footer.groups }}
+      <nav class="footer-column" aria-label="{{ $group.heading }}">
+        <p class="footer-heading">{{ $group.heading }}</p>
+        {{ with $group.summary }}<p class="footer-group-copy">{{ . }}</p>{{ end }}
+        <ul class="footer-links">
+          {{ range $group.links }}
+            <li>
+              {{ if $group.external }}
+                <a href="{{ .url }}" rel="noopener noreferrer" target="_blank">{{ .label }}</a>
+              {{ else }}
+                <a href="{{ .url }}">{{ .label }}</a>
+              {{ end }}
+            </li>
+          {{ end }}
+        </ul>
+      </nav>
+    {{ end }}
   </div>
 </footer>

@@ -8,6 +8,11 @@ describe('transformListing', () => {
       title: 'Handmade Mug',
       description: 'Stoneware mug',
       state: 'active',
+      price: {
+        amount: 2499,
+        divisor: 100,
+        currency_code: 'GBP',
+      },
       taxonomy_path: ['Home & Living', 'Kitchen & Dining', 'Drinkware'],
       images: [
         { url_fullxfull: 'https://i.etsystatic.com/full.jpg' },
@@ -29,6 +34,11 @@ describe('transformListing', () => {
       ],
       available: true,
       categories: ['Home & Living', 'Kitchen & Dining', 'Drinkware'],
+      price: {
+        amount: 24.99,
+        currency: 'GBP',
+        display: '£24.99',
+      },
       etsyUrl: 'https://www.etsy.com/listing/1234567890',
     });
   });
@@ -57,6 +67,11 @@ describe('transformListing', () => {
     ]);
     expect(result.categories).toEqual(['Art']);
     expect(result.available).toBe(false);
+    expect(result.price).toEqual({
+      amount: null,
+      currency: null,
+      display: null,
+    });
     expect(result.etsyUrl).toBe('https://www.etsy.com/listing/42');
   });
 
@@ -70,6 +85,11 @@ describe('transformListing', () => {
       images: [],
       available: false,
       categories: ['Uncategorised'],
+      price: {
+        amount: null,
+        currency: null,
+        display: null,
+      },
       etsyUrl: 'https://www.etsy.com/listing/',
     });
   });
@@ -81,5 +101,48 @@ describe('transformListing', () => {
     });
 
     expect(result.categories).toEqual(['Uncategorised']);
+  });
+
+  it('uses tags as fallback categories when taxonomy is empty', () => {
+    const result = transformListing({
+      listing_id: 8,
+      taxonomy_path: [],
+      tags: [' Planters ', '', 'Home Decor', 'Planters', null, 0],
+    });
+
+    expect(result.categories).toEqual(['Planters', 'Home Decor']);
+  });
+
+  it('prefers taxonomy categories over tags when taxonomy has values', () => {
+    const result = transformListing({
+      listing_id: 9,
+      taxonomy_path: ['Art', 'Wall Decor'],
+      tags: ['Should', 'Not', 'Be', 'Used'],
+    });
+
+    expect(result.categories).toEqual(['Art', 'Wall Decor']);
+  });
+
+  it('maps image URLs from Etsy include payloads using Images', () => {
+    const result = transformListing({
+      listing_id: 55,
+      Images: [{ url_570xN: 'https://i.etsystatic.com/from-include.jpg' }],
+    });
+
+    expect(result.images).toEqual(['https://i.etsystatic.com/from-include.jpg']);
+  });
+
+  it('maps string price values with listing currency code', () => {
+    const result = transformListing({
+      listing_id: 56,
+      price: '15.50',
+      currency_code: 'gbp',
+    });
+
+    expect(result.price).toEqual({
+      amount: 15.5,
+      currency: 'GBP',
+      display: '£15.50',
+    });
   });
 });

@@ -117,6 +117,32 @@ Add a dedicated `npm run test:smoke` command and gate smoke specs behind `RUN_SM
 
 ---
 
+## ADR-005: Use approved footer IA for P051 when production DNS is unavailable
+**Date:** 2026-02-12  
+**Status:** Accepted
+
+### Context
+P051 requires matching footer content from `shop.vaines.org`, but DNS resolution is unavailable in this execution environment, so the live footer cannot be fetched directly.
+
+### Decision
+Use the approved footer information architecture already captured in planning notes as the implementation baseline for P051:
+- `My other stuff`: `Blog`, `Instagram`
+- `Quick Links`: `About`, `Contact`, `Privacy`, `Sitemap`
+
+### Consequences
+**Positive:**
+- P051 can be completed without blocking on environment network constraints
+- Footer structure is aligned with the agreed section labels and link set
+
+**Negative:**
+- Verbatim live-site wording cannot be mechanically confirmed in this environment
+
+**Mitigations:**
+- Keep external URL centralisation work in P055
+- Reconcile wording/URLs against production once DNS access is available
+
+---
+
 <!-- Template:
 
 ## ADR-NNN: Title

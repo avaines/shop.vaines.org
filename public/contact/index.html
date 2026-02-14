@@ -26,45 +26,105 @@
 
   <main id="main-content">
     
-<section class="container content-page">
-  <article>
-    <h1>Contact</h1>
-    <p>Have a question about a product or custom order?</p>
+<section class="container contact-page">
+  <div class="contact-layout">
+    <article class="contact-intro">
+      <h1>Contact</h1>
+      <div class="contact-copy">
+        <p>Have a question about a product or custom order?</p>
 <p>Use the form below and we will get back to you soon.</p>
 
+      </div>
+    </article>
 
-    <form
-      action="https://formspree.io/f/your-form-id"
-      method="POST"
-      class="contact-form"
-    >
-      <label for="contact-name">Name</label>
-      <input id="contact-name" name="name" type="text" required>
+    <aside class="contact-panel">
+      <h2>Send a message</h2>
+      <p class="contact-note">Use this form for product questions or custom requests.</p>
 
-      <label for="contact-email">Email</label>
-      <input id="contact-email" name="email" type="email" required>
+      <form
+        action="https://formspree.io/f/your-form-id"
+        method="POST"
+        class="contact-form"
+      >
+        <label for="contact-name">Name</label>
+        <input id="contact-name" name="name" type="text" autocomplete="name" required>
 
-      <label for="contact-message">Message</label>
-      <textarea id="contact-message" name="message" rows="6" required></textarea>
+        <label for="contact-email">Email</label>
+        <input id="contact-email" name="email" type="email" autocomplete="email" required>
 
-      <button type="submit">Send message</button>
-    </form>
-  </article>
+        <label for="contact-message">Message</label>
+        <textarea id="contact-message" name="message" rows="6" required></textarea>
+
+        <button class="contact-submit" type="submit">Send message</button>
+      </form>
+    </aside>
+  </div>
 </section>
 
   </main>
 
   <footer class="site-footer">
   <div class="site-footer__inner">
-    <p>&copy; 2026 Vaines Shop. All rights reserved.</p>
+    
+    <div class="footer-brand">
+      <p class="footer-title">Vaines Shop</p>
+      <p class="footer-copy">Handmade goods from the Vaines workshop, built to be used and kept.</p>
+      <p class="footer-meta">&copy; 2026 Vaines Shop. All rights reserved.</p>
+    </div>
 
-    <nav aria-label="Footer links">
-      <ul class="footer-links">
-        <li><a href="/privacy/">Privacy</a></li>
-        <li><a href="https://instagram.com/" rel="noopener noreferrer" target="_blank">Instagram</a></li>
-        <li><a href="https://facebook.com/" rel="noopener noreferrer" target="_blank">Facebook</a></li>
-      </ul>
-    </nav>
+    
+      <nav class="footer-column" aria-label="My other stuff">
+        <p class="footer-heading">My other stuff</p>
+        <p class="footer-group-copy">Follow the workshop and writing.</p>
+        <ul class="footer-links">
+          
+            <li>
+              
+                <a href="https://vaines.org/" rel="noopener noreferrer" target="_blank">Blog</a>
+              
+            </li>
+          
+            <li>
+              
+                <a href="https://instagram.com/" rel="noopener noreferrer" target="_blank">Instagram</a>
+              
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav class="footer-column" aria-label="Quick Links">
+        <p class="footer-heading">Quick Links</p>
+        <p class="footer-group-copy">Essential pages for this shop.</p>
+        <ul class="footer-links">
+          
+            <li>
+              
+                <a href="/about/">About</a>
+              
+            </li>
+          
+            <li>
+              
+                <a href="/contact/">Contact</a>
+              
+            </li>
+          
+            <li>
+              
+                <a href="/privacy/">Privacy</a>
+              
+            </li>
+          
+            <li>
+              
+                <a href="/sitemap.xml">Sitemap</a>
+              
+            </li>
+          
+        </ul>
+      </nav>
+    
   </div>
 </footer>
 

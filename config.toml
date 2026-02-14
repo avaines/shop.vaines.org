@@ -1,10 +1,49 @@
 baseURL = "https://shop.vaines.org/"
 languageCode = "en-gb"
-title = "Vaines Shop"
+title = "Vaines | Shop"
 
 [params]
   description = "Handcrafted goods and artisan products"
   author = "Vaines"
+
+  [params.footer]
+    title = "Vaines | Shop"
+    summary = "Handmade goods from the Vaines workshop, built to be used and kept."
+    copyright = "All rights reserved."
+
+    [[params.footer.groups]]
+      heading = "My other stuff"
+      summary = "Follow the workshop and writing."
+      external = true
+
+      [[params.footer.groups.links]]
+        label = "Blog"
+        url = "https://vaines.org/"
+
+      [[params.footer.groups.links]]
+        label = "Instagram"
+        url = "https://instagram.com/"
+
+    [[params.footer.groups]]
+      heading = "Quick Links"
+      summary = "Essential pages for this shop."
+      external = false
+
+      [[params.footer.groups.links]]
+        label = "About"
+        url = "/about/"
+
+      [[params.footer.groups.links]]
+        label = "Contact"
+        url = "/contact/"
+
+      [[params.footer.groups.links]]
+        label = "Privacy"
+        url = "/privacy/"
+
+      [[params.footer.groups.links]]
+        label = "Sitemap"
+        url = "/sitemap.xml"
 
 [markup]
   [markup.goldmark]

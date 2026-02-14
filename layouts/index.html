@@ -1,119 +1,33 @@
 {{ define "main" }}
-<style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+<section class="home-intro">
+  <div class="container home-intro__inner">
+    <p class="home-eyebrow">Handmade from the Vaines workshop</p>
+    <h1>Pieces with character, built to be used every day.</h1>
+    <p class="home-lead">
+      Browse recent makes, discover featured work, and view every available item direct from Etsy.
+    </p>
+    <div class="home-actions">
+      <a class="home-action-primary" href="#all-products">Browse all products</a>
+      <a class="home-action-secondary" href="/contact/">Ask about custom work</a>
+    </div>
+  </div>
+</section>
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background: #f5f5f5;
-  }
+<section class="container home-section">
+  <div class="home-section-head">
+    <h2>Featured items</h2>
+    <p>A quick look at currently available work.</p>
+  </div>
+  <div id="featured-products" class="featured-grid">
+    <div class="loading">Loading featured products...</div>
+  </div>
+</section>
 
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-
-  .product-card {
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-
-  .product-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  }
-
-  .product-image {
-    width: 100%;
-    height: 280px;
-    object-fit: cover;
-  }
-
-  .product-info {
-    padding: 16px;
-  }
-
-  .product-name {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-
-  .product-description {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 12px;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .product-categories {
-    font-size: 12px;
-    color: #999;
-    margin-bottom: 12px;
-  }
-
-  .product-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .availability {
-    font-size: 13px;
-    padding: 4px 8px;
-    border-radius: 4px;
-  }
-
-  .availability.in-stock {
-    background: #e7f5e8;
-    color: #2e7d32;
-  }
-
-  .availability.sold-out {
-    background: #fce4e4;
-    color: #c62828;
-  }
-
-  .etsy-link {
-    color: #f16521;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-  }
-
-  .etsy-link:hover {
-    text-decoration: underline;
-  }
-
-  .loading {
-    text-align: center;
-    padding: 60px 20px;
-    color: #999;
-  }
-
-  .error {
-    text-align: center;
-    padding: 60px 20px;
-    color: #c62828;
-    background: #fce4e4;
-    border-radius: 8px;
-  }
-
-</style>
-
-<section class="container">
+<section class="container home-section" id="all-products">
+  <div class="home-section-head">
+    <h2>All products</h2>
+    <p>Complete catalogue pulled from Etsy listings.</p>
+  </div>
   <div id="products" class="product-grid">
     <div class="loading">Loading products...</div>
   </div>

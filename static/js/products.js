@@ -1,4 +1,5 @@
 import { createProductImageMarkup, initProductCarousels } from "./carousel.js";
+import { getProductPriceText } from "./price.js";
 
 export function slugifyCategory(category) {
   return String(category)
@@ -37,8 +38,49 @@ export function getProductsLoadErrorHtml() {
   return '<div class="error">Unable to load products. Please try again later.</div>';
 }
 
+function getCardMarkup(product) {
+  const categories = product.categories && product.categories.length > 0
+    ? product.categories.join(", ")
+    : "Uncategorised";
+
+  const availabilityClass = product.available ? "badge-available" : "badge-sold-out";
+  const availabilityText = product.available ? "In Stock" : "Sold Out";
+  const cardStateClass = product.available ? "" : " product-card-sold-out";
+  const productPrice = getProductPriceText(product);
+  const unavailablePriceClass = productPrice === "Price unavailable"
+    ? " product-price-unavailable"
+    : "";
+
+  return `
+    <div class="product-card${cardStateClass}">
+      <span class="badge ${availabilityClass}">${availabilityText}</span>
+      ${createProductImageMarkup(product)}
+      <div class="product-info">
+        <h3 class="product-name">${product.name}</h3>
+        <p class="product-description">${product.description}</p>
+        <div class="product-categories">${categories}</div>
+        <p class="product-price${unavailablePriceClass}">${productPrice}</p>
+        <div class="product-footer">
+          <a href="${product.etsyUrl}" class="etsy-link" target="_blank" rel="noopener">View on Etsy</a>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function selectFeaturedProducts(products, count = 3) {
+  if (!Array.isArray(products)) {
+    return [];
+  }
+
+  const availableProducts = products.filter((product) => product?.available);
+  const source = availableProducts.length >= count ? availableProducts : products;
+  return source.slice(0, count);
+}
+
 export async function loadProducts({ doc = document, fetchFn = fetch, logger = console } = {}) {
   const container = doc.getElementById("products");
+  const featuredContainer = doc.getElementById("featured-products");
 
   if (!container) {
     return;
@@ -55,43 +97,30 @@ export async function loadProducts({ doc = document, fetchFn = fetch, logger = c
 
     if (!Array.isArray(products) || products.length === 0) {
       container.innerHTML = '<div class="error">No products available</div>';
+      if (featuredContainer) {
+        featuredContainer.innerHTML = '<div class="error">No featured products available</div>';
+      }
       renderCategoryNav([], doc);
       return;
     }
 
     renderCategoryNav(products, doc);
 
-    container.innerHTML = products
-      .map((product) => {
-        const categories = product.categories && product.categories.length > 0
-          ? product.categories.join(", ")
-          : "Uncategorised";
+    if (featuredContainer) {
+      const featuredProducts = selectFeaturedProducts(products);
+      featuredContainer.innerHTML = featuredProducts.map(getCardMarkup).join("");
+      initProductCarousels(featuredContainer);
+    }
 
-        const availabilityClass = product.available ? "badge-available" : "badge-sold-out";
-        const availabilityText = product.available ? "In Stock" : "Sold Out";
-        const cardStateClass = product.available ? "" : " product-card-sold-out";
-
-        return `
-          <div class="product-card${cardStateClass}">
-            <span class="badge ${availabilityClass}">${availabilityText}</span>
-            ${createProductImageMarkup(product)}
-            <div class="product-info">
-              <h3 class="product-name">${product.name}</h3>
-              <p class="product-description">${product.description}</p>
-              <div class="product-categories">${categories}</div>
-              <div class="product-footer">
-                <a href="${product.etsyUrl}" class="etsy-link" target="_blank" rel="noopener">View on Etsy</a>
-              </div>
-            </div>
-          </div>
-        `;
-      })
-      .join("");
+    container.innerHTML = products.map(getCardMarkup).join("");
 
     initProductCarousels(container);
   } catch (error) {
     logger.error("Failed to load products:", error);
     container.innerHTML = getProductsLoadErrorHtml();
+    if (featuredContainer) {
+      featuredContainer.innerHTML = getProductsLoadErrorHtml();
+    }
   }
 }
 

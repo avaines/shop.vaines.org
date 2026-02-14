@@ -1,4 +1,5 @@
 import { createProductImageMarkup, initProductCarousels } from "./carousel.js";
+import { getProductPriceText } from "./price.js";
 
 export function slugifyCategory(category) {
   return String(category)
@@ -101,6 +102,10 @@ function renderProducts(container, products) {
     const availabilityClass = product.available ? "badge-available" : "badge-sold-out";
     const availabilityText = product.available ? "In Stock" : "Sold Out";
     const cardStateClass = product.available ? "" : " product-card-sold-out";
+    const productPrice = getProductPriceText(product);
+    const unavailablePriceClass = productPrice === "Price unavailable"
+      ? " product-price-unavailable"
+      : "";
 
     return `
       <div class="product-card${cardStateClass}">
@@ -110,6 +115,7 @@ function renderProducts(container, products) {
           <h3 class="product-name">${product.name}</h3>
           <p class="product-description">${product.description}</p>
           <div class="product-categories">${categories}</div>
+          <p class="product-price${unavailablePriceClass}">${productPrice}</p>
           <div class="product-footer">
             <a href="${product.etsyUrl}" class="etsy-link" target="_blank" rel="noopener">View on Etsy</a>
           </div>

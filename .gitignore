@@ -4,3 +4,5 @@
 **/node_modules/
 **/.wrangler/
 agent_result.*
+public/
+coverage/coverage-summary.json

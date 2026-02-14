@@ -14,9 +14,13 @@ export function createProductImageMarkup(product) {
   const firstImage = images[0] || FALLBACK_IMAGE;
   const name = product?.name || "Product image";
   const safeName = String(name).replace(/"/g, "&quot;");
+  const etsyUrl = product?.etsyUrl || '#';
+  const safeEtsyUrl = String(etsyUrl).replace(/"/g, "&quot;");
 
   if (images.length <= 1) {
-    return `<img src="${firstImage}" alt="${safeName}" class="product-image product-image-loading" loading="lazy">`;
+    return `<a href="${safeEtsyUrl}" target="_blank" rel="noopener" class="product-image-link">
+      <img src="${firstImage}" alt="Photo of ${safeName}" class="product-image product-image-loading" loading="lazy">
+    </a>`;
   }
 
   const encodedImages = encodeURIComponent(JSON.stringify(images));
@@ -24,13 +28,15 @@ export function createProductImageMarkup(product) {
   return `
     <div class="product-carousel" data-current-index="0" tabindex="0">
       <button type="button" class="carousel-button carousel-prev" aria-label="Previous image">Prev</button>
-      <img
-        src="${firstImage}"
-        alt="${safeName}"
-        class="product-image carousel-image product-image-loading"
-        loading="lazy"
-        data-images="${encodedImages}"
-      >
+      <a href="${safeEtsyUrl}" target="_blank" rel="noopener" class="product-image-link">
+        <img
+          src="${firstImage}"
+          alt="Photo of ${safeName}"
+          class="product-image carousel-image product-image-loading"
+          loading="lazy"
+          data-images="${encodedImages}"
+        >
+      </a>
       <button type="button" class="carousel-button carousel-next" aria-label="Next image">Next</button>
     </div>
   `;

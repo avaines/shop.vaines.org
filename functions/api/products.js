@@ -12,6 +12,8 @@ function jsonResponse(data, status = 200) {
     headers: {
       'Content-Type': 'application/json',
       'Cache-Control': 'public, max-age=3600',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET',
     },
   });
 }
@@ -45,6 +47,7 @@ async function syncProducts(env, { forceRefresh = false, refreshFallbackProducts
     const etsyData = await fetchActiveListings(
       env?.ETSY_SHOP_ID,
       env?.ETSY_API_KEY,
+      env?.ETSY_API_SHARED_SECRET,
     );
     const listings = Array.isArray(etsyData?.results) ? etsyData.results : [];
     const products = listings.map((listing) => transformListing(listing));
@@ -78,57 +81,22 @@ async function syncProducts(env, { forceRefresh = false, refreshFallbackProducts
   }
 }
 
-async function refreshProducts(env) {
-  const refreshFallbackProducts = productCache.getStale(PRODUCT_CACHE_KEY);
-  productCache.delete(PRODUCT_CACHE_KEY);
-
-  return syncProducts(env, {
-    forceRefresh: true,
-    refreshFallbackProducts,
-  });
-}
-
 /**
  * Cloudflare Pages Function: Product API
  * Returns product data from Etsy API with in-memory TTL caching.
  */
 export async function onRequest(context) {
-  const requestUrl = new URL(context.request.url);
-  const refreshToken = requestUrl.searchParams.get('refresh');
-  const isRefreshRequest = refreshToken !== null;
-
-  if (isRefreshRequest) {
-    if (refreshToken !== context.env?.ETSY_API_SHARED_SECRET) {
-      return jsonResponse({ error: 'Forbidden: invalid refresh secret' }, 403);
-    }
-  }
-
-  const result = isRefreshRequest
-    ? await refreshProducts(context.env)
-    : await syncProducts(context.env);
+  const result = await syncProducts(context.env);
 
   if (!result.ok) {
+    console.error(`Missing environment variables: ${result.missingEnvVars.join(', ')}`);
     return jsonResponse(
       {
-        error: `Missing required environment variables: ${result.missingEnvVars.join(', ')}`,
-        missing: result.missingEnvVars,
+        error: 'Service configuration error',
       },
       500,
     );
   }
 
   return jsonResponse(result.products);
-}
-
-/**
- * Cloudflare scheduled handler: refreshes product cache daily.
- */
-export async function onScheduled(_event, env, _ctx) {
-  const result = await refreshProducts(env);
-
-  if (!result.ok) {
-    console.error(
-      `Scheduled refresh skipped: missing required environment variables: ${result.missingEnvVars.join(', ')}`,
-    );
-  }
 }

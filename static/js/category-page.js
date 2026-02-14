@@ -67,19 +67,27 @@ function findCategoryDisplayName(products, categorySlug) {
   return prettyCategoryName(categorySlug);
 }
 
-function renderCategoryNav(products, categorySlug) {
+function renderCategoryNav(products, categorySlug, allowedCategories = null) {
   const categoryNav = document.getElementById("category-nav");
 
   if (!categoryNav) {
     return;
   }
 
-  const uniqueCategories = [...new Set(
+  let uniqueCategories = [...new Set(
     products
       .flatMap((product) => (Array.isArray(product.categories) ? product.categories : []))
       .map((category) => String(category).trim())
       .filter((category) => category.length > 0),
   )];
+
+  // Filter to allowed categories if whitelist provided
+  if (Array.isArray(allowedCategories) && allowedCategories.length > 0) {
+    const allowedSet = new Set(allowedCategories.map((c) => c.toLowerCase()));
+    uniqueCategories = uniqueCategories.filter((category) =>
+      allowedSet.has(category.toLowerCase()),
+    );
+  }
 
   const links = [
     `<a class="category-link${categorySlug ? "" : " is-active"}" href="/">All Products</a>`,
@@ -147,13 +155,13 @@ async function loadCategoryPage() {
     if (!Array.isArray(products) || products.length === 0) {
       heading.textContent = "Product Category";
       container.innerHTML = '<div class="error">No products available</div>';
-      renderCategoryNav([], categorySlug);
+      renderCategoryNav([], categorySlug, window.SITE_CONFIG?.allowedCategories);
       return;
     }
 
     const filteredProducts = filterProductsByCategory(products, categorySlug);
     heading.textContent = findCategoryDisplayName(products, categorySlug);
-    renderCategoryNav(products, categorySlug);
+    renderCategoryNav(products, categorySlug, window.SITE_CONFIG?.allowedCategories);
 
     if (filteredProducts.length === 0) {
       container.innerHTML = '<div class="error">No products found in this category.</div>';

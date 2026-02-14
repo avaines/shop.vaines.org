@@ -1,5 +1,7 @@
 # Vaines Shop
 
+[![Tests](https://github.com/avaines/shop.vaines.org/actions/workflows/test.yml/badge.svg)](https://github.com/avaines/shop.vaines.org/actions/workflows/test.yml)
+
 Visit [shop.vaines.org](https://shop.vaines.org) to browse handcrafted goods and artisan products.
 
 ## Architecture
@@ -81,10 +83,16 @@ This generates static files in `public/` ready for deployment.
 
 ## Running Tests
 
-Run unit tests:
+Run unit and integration tests:
 
 ```bash
 npm test
+```
+
+Run linter:
+
+```bash
+npm run lint
 ```
 
 Run tests in watch mode:
@@ -92,10 +100,6 @@ Run tests in watch mode:
 ```bash
 npm run test:watch
 ```
-
-Run local smoke tests (requires the local dev server to be running on `http://127.0.0.1:8788`):
-
-```bash
 npm run test:smoke
 ```
 
@@ -145,9 +149,7 @@ Cloudflare Pages will automatically deploy on push to the main branch.
 
 ### `GET /api/products`
 
-Returns array of products.
-
-**Response Schema:**
+Returns array of products (cached for 60 minutes).
 
 ```json
 [
@@ -163,9 +165,13 @@ Returns array of products.
 ]
 ```
 
-### `GET /api/products?refresh=<SECRET>`
+**Cache Refresh:**
 
-Manually triggers product sync (when Etsy integration is implemented).
+Products are automatically refreshed daily at 00:00 UTC via scheduled cron in production.
+
+**Local development:** Restart the dev server (`Ctrl+C` then `npm run dev`) to clear the cache and fetch fresh data from Etsy.
+
+**Production:** The scheduled handler runs automatically daily, or trigger it manually from the Cloudflare dashboard (Functions → Scheduled Triggers).
 
 ## Licence
 

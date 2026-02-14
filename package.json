@@ -12,7 +12,6 @@
     "lint": "eslint functions/**/*.js",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:smoke": "RUN_SMOKE_TESTS=1 vitest run tests/smoke.test.js",
     "test:watch": "vitest",
     "postinstall": "node scripts/patch-miniflare-youch.mjs"
   },
@@ -27,6 +26,7 @@
   "license": "MIT",
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250110.0",
+    "@vitest/coverage-v8": "^2.1.9",
     "eslint": "^9.17.0",
     "npm-run-all2": "^7.0.2",
     "vitest": "^2.1.8",

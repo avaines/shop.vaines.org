@@ -3,14 +3,14 @@
     {{ $footer := .Site.Params.footer }}
     <div class="footer-brand">
       <p class="footer-title">{{ with $footer.title }}{{ . }}{{ else }}{{ .Site.Title }}{{ end }}</p>
-      <p class="footer-copy">{{ with $footer.summary }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}</p>
+      <p class="footer-copy">{{ with $footer.summary | safeHTML}}{{ . }}{{ else }}{{ .Site.Params.description | safeHTML }}{{ end }}</p>
       <p class="footer-meta">&copy; {{ now.Year }} {{ .Site.Title }}. {{ with $footer.copyright }}{{ . }}{{ else }}All rights reserved.{{ end }}</p>
     </div>
 
     {{ range $group := $footer.groups }}
       <nav class="footer-column" aria-label="{{ $group.heading }}">
         <p class="footer-heading">{{ $group.heading }}</p>
-        {{ with $group.summary }}<p class="footer-group-copy">{{ . }}</p>{{ end }}
+        {{ with $group.summary | safeHTML}}<p class="footer-group-copy">{{ . }}</p>{{ end }}
         <ul class="footer-links">
           {{ range $group.links }}
             <li>

@@ -1,10 +1,9 @@
 {{ define "main" }}
 <section class="home-intro">
   <div class="container home-intro__inner">
-    <p class="home-eyebrow">Handmade from the Vaines workshop</p>
-    <h1>Pieces with character, built to be used every day.</h1>
+    <h1>{{ .Site.Params.subHeader }}</h1>
     <p class="home-lead">
-      Browse recent makes, discover featured work, and view every available item direct from Etsy.
+      {{ .Site.Params.description | safeHTML }}
     </p>
     <div class="home-actions">
       <a class="home-action-primary" href="#all-products">Browse all products</a>
@@ -32,6 +31,9 @@
     <div class="loading">Loading products...</div>
   </div>
 </section>
-
-<script type="module" src="/js/products.js"></script>
+<script>
+  window.SITE_CONFIG = {
+    allowedCategories: {{ .Site.Params.categories | jsonify | safeJS }}
+  };
+</script><script type="module" src="/js/products.js"></script>
 {{ end }}

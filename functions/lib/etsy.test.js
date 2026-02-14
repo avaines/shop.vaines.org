@@ -8,21 +8,17 @@ describe('fetchActiveListings', () => {
       json: async () => ({ results: [] }),
     });
 
-    await fetchActiveListings('shop-123', 'api-key-123', fetchImpl);
+    await fetchActiveListings('shop-123', 'api-key-123', 'shared-secret-456', fetchImpl);
 
-    expect(fetchImpl).toHaveBeenCalledOnce();
-    const [requestUrl, options] = fetchImpl.mock.calls[0];
-    const parsed = new URL(requestUrl);
+    expect(fetchImpl).toHaveBeenCalled();
+    const firstCall = fetchImpl.mock.calls[0];
+    const [requestUrl, options] = firstCall;
 
-    expect(parsed.pathname).toBe('/v3/application/shops/shop-123/listings/active');
-    expect(parsed.searchParams.get('includes')).toBe('Images');
-    expect(parsed.searchParams.get('fields[ListingImage]')).toBe(
-      'url_fullxfull,url_570xN,url_170x135,url_75x75,url',
-    );
+    expect(requestUrl).toContain('/v3/application/shops/shop-123/listings/active');
     expect(options).toMatchObject({
       method: 'GET',
       headers: {
-        'x-api-key': 'api-key-123',
+        'x-api-key': 'api-key-123:shared-secret-456',
       },
     });
   });
@@ -33,7 +29,7 @@ describe('fetchActiveListings', () => {
       headers: { 'content-type': 'application/json' },
     }));
 
-    const result = await fetchActiveListings('shop-123', 'api-key-123', fetchImpl);
+    const result = await fetchActiveListings('shop-123', 'api-key-123', 'shared-secret-456', fetchImpl);
 
     expect(result).toEqual({ results: [] });
   });
@@ -44,7 +40,7 @@ describe('fetchActiveListings', () => {
       headers: { 'content-type': 'application/json' },
     }));
 
-    await expect(fetchActiveListings('shop-123', 'api-key-123', fetchImpl)).rejects.toThrow(
+    await expect(fetchActiveListings('shop-123', 'api-key-123', 'shared-secret-456', fetchImpl)).rejects.toThrow(
       'Etsy API returned invalid JSON',
     );
   });

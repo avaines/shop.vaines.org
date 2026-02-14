@@ -1,29 +1,57 @@
 const ETSY_API_BASE_URL = 'https://openapi.etsy.com/v3/application';
 
 /**
- * Fetch active listings for an Etsy shop.
+ * Fetch listing images for a specific listing.
  *
- * @param {string} shop_id
+ * @param {string} listing_id
  * @param {string} api_key
+ * @param {string} shared_secret
  * @param {typeof fetch} [fetch_impl]
- * @returns {Promise<object>}
+ * @returns {Promise<object[]>}
  */
-export async function fetchActiveListings(shop_id, api_key, fetch_impl = fetch) {
-  const url = new URL(`${ETSY_API_BASE_URL}/shops/${shop_id}/listings/active`);
-  url.searchParams.set('includes', 'Images');
-  url.searchParams.set(
-    'fields[ListingImage]',
-    'url_fullxfull,url_570xN,url_170x135,url_75x75,url',
-  );
+async function fetchListingImages(listing_id, api_key, shared_secret, fetch_impl = fetch) {
+  const url = `${ETSY_API_BASE_URL}/listings/${listing_id}/images`;
 
-  const response = await fetch_impl(url.toString(), {
+  const response = await fetch_impl(url, {
     method: 'GET',
     headers: {
-      'x-api-key': api_key,
+      'x-api-key': `${api_key}:${shared_secret}`,
     },
   });
 
   if (!response.ok) {
+    // Don't fail the whole sync if images fail for one listing
+    console.warn(`Failed to fetch images for listing ${listing_id}: ${response.status}`);
+    return [];
+  }
+
+  const data = await response.json();
+  return Array.isArray(data.results) ? data.results : [];
+}
+
+/**
+ * Fetch active listings for an Etsy shop with images.
+ *
+ * @param {string} shop_id
+ * @param {string} api_key
+ * @param {string} shared_secret
+ * @param {typeof fetch} [fetch_impl]
+ * @returns {Promise<object>}
+ */
+export async function fetchActiveListings(shop_id, api_key, shared_secret, fetch_impl = fetch) {
+  const url = new URL(`${ETSY_API_BASE_URL}/shops/${shop_id}/listings/active`);
+
+  const response = await fetch_impl(url.toString(), {
+    method: 'GET',
+    headers: {
+      'x-api-key': `${api_key}:${shared_secret}`,
+    },
+  });
+
+  if (!response.ok) {
+    if (response.status === 429) {
+      throw new Error('Etsy API rate limit exceeded. Try again later.');
+    }
     throw new Error(`Etsy API request failed with status ${response.status}`);
   }
 
@@ -41,9 +69,21 @@ export async function fetchActiveListings(shop_id, api_key, fetch_impl = fetch) 
     return { results: [] };
   }
 
+  let data;
   try {
-    return JSON.parse(payloadText);
+    data = JSON.parse(payloadText);
   } catch {
     throw new Error('Etsy API returned invalid JSON');
   }
+
+  // Fetch images for each listing
+  const listings = Array.isArray(data.results) ? data.results : [];
+  const listingsWithImages = await Promise.all(
+    listings.map(async (listing) => {
+      const images = await fetchListingImages(listing.listing_id, api_key, shared_secret, fetch_impl);
+      return { ...listing, images };
+    }),
+  );
+
+  return { ...data, results: listingsWithImages };
 }

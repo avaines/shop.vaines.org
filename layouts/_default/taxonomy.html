@@ -6,5 +6,10 @@
   </div>
 </section>
 
+<script>
+  window.SITE_CONFIG = {
+    allowedCategories: {{ .Site.Params.categories | jsonify | safeJS }}
+  };
+</script>
 <script type="module" src="/js/category-page.js"></script>
 {{ end }}

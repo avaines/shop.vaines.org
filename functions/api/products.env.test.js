@@ -19,8 +19,7 @@ describe('/api/products environment validation', () => {
     const body = await response.json();
 
     expect(response.status).toBe(500);
-    expect(body.error).toContain('ETSY_API_KEY');
-    expect(body.missing).toEqual(['ETSY_API_KEY']);
+    expect(body.error).toBe('Service configuration error');
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
@@ -34,13 +33,7 @@ describe('/api/products environment validation', () => {
     const body = await response.json();
 
     expect(response.status).toBe(500);
-    expect(body.error).toContain('ETSY_API_KEY');
-    expect(body.error).toContain('ETSY_SHOP_ID');
-    expect(body.missing).toEqual([
-      'ETSY_API_KEY',
-      'ETSY_SHOP_ID',
-      'ETSY_API_SHARED_SECRET',
-    ]);
+    expect(body.error).toBe('Service configuration error');
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 });

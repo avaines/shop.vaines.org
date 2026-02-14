@@ -1,6 +1,22 @@
 import { createProductImageMarkup, initProductCarousels } from "./carousel.js";
 import { getProductPriceText } from "./price.js";
 
+function decodeHtmlEntities(text) {
+  const textarea = document.createElement('textarea');
+  textarea.innerHTML = text;
+  return textarea.value;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function sanitizeHtml(text) {
+  return escapeHtml(decodeHtmlEntities(text));
+}
+
 export function slugifyCategory(category) {
   return String(category)
     .trim()
@@ -9,38 +25,13 @@ export function slugifyCategory(category) {
     .replace(/^-+|-+$/g, "");
 }
 
-function renderCategoryNav(products, doc = document) {
-  const categoryNav = doc.getElementById("category-nav");
-
-  if (!categoryNav) {
-    return;
-  }
-
-  const uniqueCategories = [...new Set(
-    products
-      .flatMap((product) => (Array.isArray(product.categories) ? product.categories : []))
-      .map((category) => String(category).trim())
-      .filter((category) => category.length > 0),
-  )];
-
-  const links = [
-    '<a class="category-link is-active" href="/">All Products</a>',
-    ...uniqueCategories.map((category) => {
-      const slug = slugifyCategory(category);
-      return `<a class="category-link" href="/categories/${slug}/">${category}</a>`;
-    }),
-  ];
-
-  categoryNav.innerHTML = links.join("");
-}
-
 export function getProductsLoadErrorHtml() {
   return '<div class="error">Unable to load products. Please try again later.</div>';
 }
 
 function getCardMarkup(product) {
   const categories = product.categories && product.categories.length > 0
-    ? product.categories.join(", ")
+    ? product.categories.map(c => sanitizeHtml(c)).join(", ")
     : "Uncategorised";
 
   const availabilityClass = product.available ? "badge-available" : "badge-sold-out";
@@ -51,17 +42,21 @@ function getCardMarkup(product) {
     ? " product-price-unavailable"
     : "";
 
+  const safeName = sanitizeHtml(product.name || '');
+  const safeDescription = sanitizeHtml(product.description || '');
+  const safeEtsyUrl = escapeHtml(product.etsyUrl || '#');
+
   return `
     <div class="product-card${cardStateClass}">
       <span class="badge ${availabilityClass}">${availabilityText}</span>
       ${createProductImageMarkup(product)}
       <div class="product-info">
-        <h3 class="product-name">${product.name}</h3>
-        <p class="product-description">${product.description}</p>
+        <h3 class="product-name">${safeName}</h3>
+        <p class="product-description">${safeDescription}</p>
         <div class="product-categories">${categories}</div>
         <p class="product-price${unavailablePriceClass}">${productPrice}</p>
         <div class="product-footer">
-          <a href="${product.etsyUrl}" class="etsy-link" target="_blank" rel="noopener">View on Etsy</a>
+          <a href="${safeEtsyUrl}" class="etsy-link" target="_blank" rel="noopener">View on Etsy</a>
         </div>
       </div>
     </div>
@@ -100,11 +95,8 @@ export async function loadProducts({ doc = document, fetchFn = fetch, logger = c
       if (featuredContainer) {
         featuredContainer.innerHTML = '<div class="error">No featured products available</div>';
       }
-      renderCategoryNav([], doc);
       return;
     }
-
-    renderCategoryNav(products, doc);
 
     if (featuredContainer) {
       const featuredProducts = selectFeaturedProducts(products);

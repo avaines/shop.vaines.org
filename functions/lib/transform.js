@@ -1,4 +1,21 @@
 /**
+ * Normalize category names to plural form for consistency.
+ * @param {string} category
+ * @returns {string}
+ */
+function normalizeCategoryPlural(category) {
+  const pluralMap = {
+    'bowl': 'Bowls',
+    'bowls': 'Bowls',
+    'pen': 'Pens',
+    'pens': 'Pens',
+  };
+
+  const lower = category.toLowerCase();
+  return pluralMap[lower] || category;
+}
+
+/**
  * Transform an Etsy listing object into the app product schema.
  *
  * @param {object} listing
@@ -43,7 +60,8 @@ export function transformListing(listing) {
     categorySource
       .filter((category) => typeof category === 'string')
       .map((category) => category.trim())
-      .filter((category) => category.length > 0),
+      .filter((category) => category.length > 0)
+      .map((category) => normalizeCategoryPlural(category)),
   )];
 
   const categories = normalisedCategories.length > 0 ? normalisedCategories : ['Uncategorised'];

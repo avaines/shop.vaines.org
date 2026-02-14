@@ -9,11 +9,11 @@
     </article>
 
     <aside class="contact-panel">
-      <h2>Send a message</h2>
-      <p class="contact-note">Use this form for product questions or custom requests.</p>
+      <h2>{{ .Site.Params.contact.heading | default "Send a message" }}</h2>
+      <p class="contact-note">{{ .Site.Params.contact.note | default "Use this form for product questions or custom requests." }}</p>
 
       <form
-        action="https://formspree.io/f/your-form-id"
+        action="{{ .Site.Params.contact.formAction }}"
         method="POST"
         class="contact-form"
       >

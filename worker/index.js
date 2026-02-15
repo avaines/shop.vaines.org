@@ -94,6 +94,19 @@ export default {
   async fetch(request, env, _ctx) {
     const url = new URL(request.url);
 
+    // Handle CORS preflight OPTIONS request
+    if (request.method === 'OPTIONS') {
+      return new Response(null, {
+        status: 204,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Max-Age': '86400',
+        },
+      });
+    }
+
     // Only handle /api/products
     if (url.pathname !== '/api/products') {
       return new Response('Not Found', { status: 404 });

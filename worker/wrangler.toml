@@ -2,6 +2,10 @@ name = "vaines-shop-api"
 main = "index.js"
 compatibility_date = "2026-01-20"
 
+# Environment variables
+[vars]
+ETSY_SHOP_ID = "55681605"
+
 # Scheduled cache refresh - runs at midnight UTC daily
 [triggers]
 crons = ["0 0 * * *"]
@@ -9,4 +13,3 @@ crons = ["0 0 * * *"]
 # Environment variables (set via wrangler secret put)
 # ETSY_API_KEY
 # ETSY_API_SHARED_SECRET
-# ETSY_SHOP_ID

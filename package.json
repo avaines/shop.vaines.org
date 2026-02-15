@@ -12,8 +12,7 @@
     "lint": "eslint functions/**/*.js",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:watch": "vitest",
-    "postinstall": "node scripts/patch-miniflare-youch.mjs"
+    "test:watch": "vitest"
   },
   "keywords": [
     "cloudflare",

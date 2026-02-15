@@ -43,7 +43,7 @@ Refactoring existing Hugo + Cloudflare Workers + Square API shop to use Etsy API
 ---
 
 ## ADR-002: No External Caching Layer
-**Date:** 2026-02-12  
+**Date:** 2026-02-12
 **Status:** Accepted
 
 ### Context
@@ -70,7 +70,7 @@ Use in-memory caching within the Pages Function with 60-minute TTL. No KV namesp
 ---
 
 ## ADR-003: Preserve stale in-memory cache for Etsy error fallback
-**Date:** 2026-02-12  
+**Date:** 2026-02-12
 **Status:** Accepted
 
 ### Context
@@ -93,32 +93,8 @@ Keep expired entries in in-memory cache and expose `getStale(key)` for error fal
 
 ---
 
-## ADR-004: Keep local smoke tests opt-in
-**Date:** 2026-02-12  
-**Status:** Accepted
-
-### Context
-Local smoke checks need a running Wrangler Pages dev server and network access on `127.0.0.1:8788`. Running them in every default unit-test execution would create avoidable failures when services are not started.
-
-### Decision
-Add a dedicated `npm run test:smoke` command and gate smoke specs behind `RUN_SMOKE_TESTS=1`.
-
-### Consequences
-**Positive:**
-- `npm test` remains deterministic and fast for unit/integration coverage
-- Smoke checks stay available for local verification before merge
-
-**Negative:**
-- Smoke tests are not executed unless explicitly invoked
-
-**Mitigations:**
-- Document `npm run test:smoke` in README
-- Keep smoke test file in `tests/` so it remains visible in the test suite
-
----
-
-## ADR-005: Use approved footer IA for P051 when production DNS is unavailable
-**Date:** 2026-02-12  
+## ADR-004: Use approved footer IA for P051 when production DNS is unavailable
+**Date:** 2026-02-12
 **Status:** Accepted
 
 ### Context
@@ -146,7 +122,7 @@ Use the approved footer information architecture already captured in planning no
 <!-- Template:
 
 ## ADR-NNN: Title
-**Date:** YYYY-MM-DD  
+**Date:** YYYY-MM-DD
 **Status:** Proposed
 
 ### Context
@@ -157,12 +133,12 @@ Use the approved footer information architecture already captured in planning no
 
 ### Consequences
 **Positive:**
-- 
+-
 
 **Negative:**
-- 
+-
 
 **Mitigations:**
-- 
+-
 
 -->

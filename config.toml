@@ -12,7 +12,7 @@ title = "Vaines | Shop"
   categories = ["Wood", "Slate", "Turned", "Engraved", "Bowl", "Bowls", "Pen", "Pens"]
 
   [params.contact]
-    formAction = "https://formspree.io/f/your-form-id"
+    formAction = "https://formspree.io/f/mreaqjed"
     heading = "Send a message"
     note = "Use this form for product questions or custom requests."
 

@@ -8,7 +8,7 @@ Legacy Hugo site with separate Cloudflare Worker fetching Square API data. Refac
 ## Core Features
 
 ### 1. Etsy Product Data Function
-**Status:** In Progress (Stub Implementation Complete)  
+**Status:** In Progress (Stub Implementation Complete)
 **Priority:** P0 (Blocker)
 
 - [x] Pages Function at `/api/products` returns JSON product list
@@ -30,11 +30,10 @@ Legacy Hugo site with separate Cloudflare Worker fetching Square API data. Refac
 ---
 
 ### 2. Hugo Site Structure
-**Status:** In Progress (Basic Homepage Complete)  
+**Status:** In Progress (Basic Homepage Complete)
 **Priority:** P0 (Blocker)
 
 - [x] Homepage displays product grid (4 columns desktop, 2 mobile)
-- [ ] Individual product detail pages (`/products/<slug>`)
 - [x] Dynamic category pages (`/categories/<category-slug>`)
 - [x] About page (`/about`)
 - [x] Contact page (`/contact`) with Formspree form
@@ -42,7 +41,6 @@ Legacy Hugo site with separate Cloudflare Worker fetching Square API data. Refac
 - [x] Footer with basic links
 
 **Acceptance Criteria:**
-- [ ] `config.toml` contains `productJsonUrl = "/api/products"`
 - [x] Products fetch data from Pages Function on page load
 - [x] Navigation auto-populates from product categories
 - [x] "Uncategorised" default category if product has no categories
@@ -53,14 +51,13 @@ Legacy Hugo site with separate Cloudflare Worker fetching Square API data. Refac
 ---
 
 ### 3. Product Display & Interaction
-**Status:** In Progress (Basic Display Complete)  
+**Status:** In Progress (Basic Display Complete)
 **Priority:** P0 (Blocker)
 
 - [x] Image carousel/slider for product images (prev/next buttons)
 - [x] "View on Etsy" button linking to `etsyUrl`
 - [x] Product availability badge (In Stock / Sold Out)
 - [x] Product description rendered as HTML (handle line breaks)
-- [ ] Category filter UI on homepage
 - [x] Graceful fallback if API unavailable (show cached/static message)
 
 **Acceptance Criteria:**
@@ -73,16 +70,16 @@ Legacy Hugo site with separate Cloudflare Worker fetching Square API data. Refac
 ---
 
 ### 4. Local Development & Deployment
-**Status:** Complete (Local Dev Ready)  
+**Status:** Complete (Local Dev Ready)
 **Priority:** P0 (Blocker)
 
 - [x] `README.md` with setup instructions
 - [x] `.env.example` file documenting required variables
-- [ ] Hugo dev server runs locally (`hugo server`)
+- [x] Hugo dev server runs locally (`hugo server`)
 - [x] Pages Function testable locally (`wrangler pages dev`)
 - [x] Single command to run both services concurrently
-- [ ] Deployment via Cloudflare Pages dashboard (Git integration)
-- [ ] Environment variables configured in CF dashboard
+- [x] Deployment via Cloudflare Pages dashboard (Git integration)
+- [x] Environment variables configured in CF dashboard
 
 **Acceptance Criteria:**
 - [x] New developer can run locally in < 10 minutes following README
@@ -94,7 +91,7 @@ Legacy Hugo site with separate Cloudflare Worker fetching Square API data. Refac
 ---
 
 ### 5. Quality Gates
-**Status:** Complete (Tooling Configured)  
+**Status:** Complete (Tooling Configured)
 **Priority:** P1 (High)
 
 - [x] ESLint configured for Pages Function code
@@ -106,8 +103,6 @@ Legacy Hugo site with separate Cloudflare Worker fetching Square API data. Refac
 **Acceptance Criteria:**
 - [x] `npm test` runs all tests and passes
 - [x] `npm run lint` checks code style
-- [ ] Test coverage >70% for function logic
-- [ ] CI-ready (can add GitHub Actions later)
 - [x] README documents how to run tests
 
 ---

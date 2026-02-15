@@ -158,7 +158,7 @@ Returns array of products (cached for 60 minutes).
     "name": "string",
     "description": "string",
     "images": ["string"],
-    "available": boolean,
+    "available": "boolean",
     "categories": ["string"],
     "etsyUrl": "string"
   }
@@ -172,7 +172,3 @@ Products are automatically refreshed daily at 00:00 UTC via scheduled cron in pr
 **Local development:** Restart the dev server (`Ctrl+C` then `npm run dev`) to clear the cache and fetch fresh data from Etsy.
 
 **Production:** The scheduled handler runs automatically daily, or trigger it manually from the Cloudflare dashboard (Functions → Scheduled Triggers).
-
-## Licence
-
-MIT

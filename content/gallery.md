@@ -1,7 +1,7 @@
 ---
 title: "Gallery"
-description: "A collection of handcrafted items from the workshop"
+description: "A collection from the garage"
 type: "gallery"
 ---
 
-A showcase of pieces I've created - some available on Etsy, others already in loving homes.
+A showcase of the some of the memorable things i've created and some important milestones.

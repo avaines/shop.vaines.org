@@ -1,0 +1,39 @@
+{{ define "main" }}
+<section class="home-intro">
+  <div class="container home-intro__inner">
+    <h1>{{ .Site.Params.subHeader }}</h1>
+    <p class="home-lead">
+      {{ .Site.Params.description | safeHTML }}
+    </p>
+    <div class="home-actions">
+      <a class="home-action-primary" href="#all-products">Browse all products</a>
+      <a class="home-action-secondary" href="/contact/">Ask about custom work</a>
+    </div>
+  </div>
+</section>
+
+<section class="container home-section">
+  <div class="home-section-head">
+    <h2>Featured items</h2>
+    <p>A quick look at currently available work.</p>
+  </div>
+  <div id="featured-products" class="featured-grid">
+    <div class="loading">Loading featured products...</div>
+  </div>
+</section>
+
+<section class="container home-section" id="all-products">
+  <div class="home-section-head">
+    <h2>All products</h2>
+    <p>Complete catalogue pulled from Etsy listings.</p>
+  </div>
+  <div id="products" class="product-grid">
+    <div class="loading">Loading products...</div>
+  </div>
+</section>
+<script>
+  window.SITE_CONFIG = {
+    allowedCategories: {{ .Site.Params.categories | jsonify | safeJS }}
+  };
+</script><script type="module" src="/js/products.js"></script>
+{{ end }}

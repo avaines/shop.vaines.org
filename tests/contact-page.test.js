@@ -8,7 +8,7 @@ describe("contact page layout and accessibility basics", () => {
   it("keeps Formspree submission behaviour and required field names", () => {
     const contactTemplate = read("layouts/contact/single.html");
 
-    expect(contactTemplate).toContain('action="https://formspree.io/f/your-form-id"');
+    expect(contactTemplate).toContain('action="{{ .Site.Params.contact.formAction }}"');
     expect(contactTemplate).toContain('method="POST"');
     expect(contactTemplate).toContain('name="name"');
     expect(contactTemplate).toContain('name="email"');

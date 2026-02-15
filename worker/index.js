@@ -1,6 +1,11 @@
-import { fetchActiveListings } from '../lib/etsy.js';
-import { transformListing } from '../lib/transform.js';
-import { Cache } from '../lib/cache.js';
+/**
+ * Cloudflare Worker: Etsy Product API
+ * Handles HTTP requests to /api/products and scheduled cache refresh
+ */
+
+import { fetchActiveListings } from './lib/etsy.js';
+import { transformListing } from './lib/transform.js';
+import { Cache } from './lib/cache.js';
 
 const PRODUCT_CACHE_KEY = 'products';
 const productCache = new Cache();
@@ -82,21 +87,46 @@ async function syncProducts(env, { forceRefresh = false, refreshFallbackProducts
 }
 
 /**
- * Cloudflare Pages Function: Product API
- * Returns product data from Etsy API with in-memory TTL caching.
+ * HTTP Request Handler
+ * Serves /api/products endpoint
  */
-export async function onRequest(context) {
-  const result = await syncProducts(context.env);
+export default {
+  async fetch(request, env, _ctx) {
+    const url = new URL(request.url);
 
-  if (!result.ok) {
-    console.error(`Missing environment variables: ${result.missingEnvVars.join(', ')}`);
-    return jsonResponse(
-      {
-        error: 'Service configuration error',
-      },
-      500,
-    );
-  }
+    // Only handle /api/products
+    if (url.pathname !== '/api/products') {
+      return new Response('Not Found', { status: 404 });
+    }
 
-  return jsonResponse(result.products);
-}
+    const result = await syncProducts(env);
+
+    if (!result.ok) {
+      console.error(`Missing environment variables: ${result.missingEnvVars.join(', ')}`);
+      return jsonResponse(
+        {
+          error: 'Service configuration error',
+        },
+        500,
+      );
+    }
+
+    return jsonResponse({ products: result.products });
+  },
+
+  /**
+   * Scheduled Handler
+   * Runs on cron trigger to refresh product cache
+   */
+  async scheduled(event, env, _ctx) {
+    console.log('Running scheduled cache refresh');
+
+    const result = await syncProducts(env, { forceRefresh: true });
+
+    if (result.ok) {
+      console.log(`Cache refreshed: ${result.products.length} products`);
+    } else {
+      console.error(`Cache refresh failed: ${result.missingEnvVars.join(', ')}`);
+    }
+  },
+};

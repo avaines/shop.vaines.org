@@ -81,14 +81,20 @@ export async function loadProducts({ doc = document, fetchFn = fetch, logger = c
     return;
   }
 
+  // Use Worker dev server on localhost, relative URL in production
+  const apiUrl = window.location.hostname === 'localhost'
+    ? 'http://localhost:8788/api/products'
+    : '/api/products';
+
   try {
-    const response = await fetchFn("/api/products");
+    const response = await fetchFn(apiUrl);
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
-    const products = await response.json();
+    const data = await response.json();
+    const products = data.products || data; // Support both { products: [...] } and [...]
 
     if (!Array.isArray(products) || products.length === 0) {
       container.innerHTML = '<div class="error">No products available</div>';

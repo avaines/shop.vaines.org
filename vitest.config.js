@@ -3,13 +3,14 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     include: [
-      "functions/**/*.test.js",
-      "tests/**/*.test.js"
+      "pages/tests/**/*.test.js",
+      "worker/tests/**/*.test.js"
     ],
     coverage: {
       provider: "v8",
       reporter: ["text", "json-summary", "html"],
-      include: ["functions/**/*.js"],
+      include: ["worker/**/*.js"],
+      exclude: ["worker/tests/**", "worker/wrangler.toml"],
       thresholds: {
         lines: 70,
         functions: 70,

@@ -6,14 +6,14 @@ const read = (path) => readFileSync(path, "utf8");
 
 describe("footer sticky layout", () => {
   it("keeps shared layout hooks for sticky footer structure", () => {
-    const baseof = read("layouts/_default/baseof.html");
+    const baseof = read("pages/layouts/_default/baseof.html");
 
     expect(baseof).toContain('<main id="main-content">');
     expect(baseof).toContain('{{ partial "footer.html" . }}');
   });
 
   it("keeps viewport-height flex layout so footer stays at the bottom", () => {
-    const css = read("static/css/main.css");
+    const css = read("pages/static/css/main.css");
 
     expect(css).toContain("body {");
     expect(css).toContain("min-height: 100vh;");
@@ -24,8 +24,8 @@ describe("footer sticky layout", () => {
   });
 
   it("keeps grouped footer links configurable via Hugo params", () => {
-    const footer = read("layouts/partials/footer.html");
-    const config = read("config.toml");
+    const footer = read("pages/layouts/partials/footer.html");
+    const config = read("pages/config.toml");
 
     expect(footer).toContain("{{ range $group := $footer.groups }}");
     expect(footer).toContain("{{ if $group.external }}");
@@ -34,8 +34,8 @@ describe("footer sticky layout", () => {
   });
 
   it("keeps footer hierarchy copy and scanning styles", () => {
-    const footer = read("layouts/partials/footer.html");
-    const css = read("static/css/main.css");
+    const footer = read("pages/layouts/partials/footer.html");
+    const css = read("pages/static/css/main.css");
 
     expect(footer).toContain('class="footer-group-copy"');
     expect(footer).toContain('class="footer-meta"');

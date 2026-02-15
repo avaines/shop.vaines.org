@@ -9,12 +9,17 @@ title = "Vaines | Shop"
   font = "PT Sans"
 
   # Category whitelist: only show products with these tags
-  categories = ["Wood", "Slate", "Turned", "Engraved", "Bowl", "Bowls", "Pen", "Pens"]
+  categories = ["Wood", "Slate", "Turned", "Engraved", "Bowls", "Pens"]
 
   [params.contact]
     formAction = "https://formspree.io/f/mreaqjed"
     heading = "Send a message"
     note = "Use this form for product questions or custom requests."
+
+  [params.social]
+    blog = "https://vaines.org/"
+    etsy = "https://www.etsy.com/uk/shop/TheYorkshireGarage"
+    instagram = "https://www.instagram.com/aidensgotwood/"
 
   [params.footer]
     title = "Vaines | Shop"

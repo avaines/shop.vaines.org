@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 describe("homepage layout structure", () => {
   it("keeps dedicated intro, featured, and full product sections", () => {
-    const indexLayout = readFileSync("layouts/index.html", "utf8");
+    const indexLayout = readFileSync("pages/layouts/index.html", "utf8");
 
     expect(indexLayout).toContain('class="home-intro"');
     expect(indexLayout).toContain('id="featured-products"');

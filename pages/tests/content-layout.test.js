@@ -6,7 +6,7 @@ const read = (path) => readFileSync(path, "utf8");
 
 describe("content page shared layout", () => {
   it("keeps stylesheet and shared chrome in base layout", () => {
-    const baseof = read("layouts/_default/baseof.html");
+    const baseof = read("pages/layouts/_default/baseof.html");
 
     expect(baseof).toContain('<link rel="stylesheet" href="/css/main.css">');
     expect(baseof).toContain('{{ partial "header.html" . }}');
@@ -15,8 +15,8 @@ describe("content page shared layout", () => {
   });
 
   it("keeps About and Contact templates on the shared base layout", () => {
-    const single = read("layouts/_default/single.html");
-    const contact = read("layouts/contact/single.html");
+    const single = read("pages/layouts/_default/single.html");
+    const contact = read("pages/layouts/contact/single.html");
 
     for (const template of [single, contact]) {
       expect(template).toContain('{{ define "main" }}');

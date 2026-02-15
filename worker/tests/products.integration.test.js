@@ -34,14 +34,14 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-async function loadOnRequest() {
+async function loadWorker() {
   vi.resetModules();
-  return (await import('./products.js')).onRequest;
+  return (await import('../index.js')).default;
 }
 
 describe('/api/products integration', () => {
   it('returns transformed product schema from mocked Etsy response', async () => {
-    const onRequest = await loadOnRequest();
+    const worker = await loadWorker();
 
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
       ok: true,
@@ -49,13 +49,12 @@ describe('/api/products integration', () => {
       json: async () => makeEtsyResponse(),
     });
 
-    const response = await onRequest({
-      request: new Request('https://example.com/api/products'),
-      env: baseEnv,
-    });
-    const payload = await response.json();
+    const request = new Request('http://localhost:8788/api/products');
+    const response = await worker.fetch(request, baseEnv, {});
+    const result = await response.json();
 
     expect(response.status).toBe(200);
+    const payload = result.products;
     expect(Array.isArray(payload)).toBe(true);
     expect(payload).toHaveLength(1);
 

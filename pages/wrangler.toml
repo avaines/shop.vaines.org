@@ -1,0 +1,8 @@
+name = "vaines-shop"
+compatibility_date = "2026-01-20"
+
+# Pages configuration
+pages_build_output_dir = "./public"
+
+# Note: No functions/ directory - API handled by separate Worker
+# No cron triggers - Pages doesn't support scheduled execution

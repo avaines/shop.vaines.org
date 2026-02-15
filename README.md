@@ -7,12 +7,39 @@ Visit [shop.vaines.org](https://shop.vaines.org) to browse handcrafted goods and
 ## Architecture
 
 This shop is built using:
-- **Frontend:** Hugo (static site generator)
-- **Backend:** Cloudflare Pages Functions (Node.js)
+- **Frontend:** Hugo (static site generator) in `pages/`
+- **Backend:** Cloudflare Worker (Node.js) in `worker/`
 - **Product Source:** Etsy API v3
-- **Hosting:** Cloudflare Pages
+- **Hosting:** Cloudflare Pages (frontend) + Cloudflare Workers (API)
 
-The architecture consolidates the frontend and backend into a single Cloudflare Pages deployment with Functions for the product API.
+The architecture separates frontend and backend into independent projects:
+- **Pages project:** Hugo static site served via Cloudflare Pages
+- **Worker project:** API endpoint with scheduled cache refresh
+
+## Project Structure
+
+```
+.
+├── pages/              # Hugo static site
+│   ├── config.toml
+│   ├── content/
+│   ├── layouts/
+│   ├── static/
+│   ├── data/
+│   ├── public/         # Build output
+│   ├── tests/          # Layout tests
+│   └── wrangler.toml   # Pages config
+│
+├── worker/             # Cloudflare Worker API
+│   ├── index.js        # Worker entry point
+│   ├── wrangler.toml   # Worker config + cron
+│   ├── lib/            # etsy.js, cache.js, transform.js
+│   └── tests/          # API tests
+│
+├── package.json        # Root npm scripts
+├── vitest.config.js    # Test configuration
+└── eslint.config.js    # Linter configuration
+```
 
 ## Prerequisites
 
@@ -49,44 +76,61 @@ ETSY_SHOP_ID=your_shop_id_here
 
 ### 3. Run Development Server
 
-Start both Hugo and Wrangler in parallel:
+Start both projects in parallel:
 
 ```bash
 npm run dev
 ```
 
 This runs:
-- Hugo server (builds site to `public/`)
-- Wrangler Pages dev server (serves `public/` + Functions on port 8788)
+- Hugo server on **http://localhost:1313** (port 1313)
+- Worker dev server on **http://localhost:8788** (port 8788)
 
-Visit **http://localhost:8788** to see the site.
+Or run them individually:
+
+```bash
+npm run dev:pages   # Hugo only
+npm run dev:worker  # Worker only
+```
 
 ### 4. Test the API Endpoint
 
-The product API is available at:
+The Worker serves the product API:
 
 ```bash
 curl http://localhost:8788/api/products
 ```
 
-You should receive a JSON array of products.
+Update your frontend to call the Worker API endpoint.
 
 ## Building for Production
 
-Build the Hugo site:
+Build both projects:
 
 ```bash
 npm run build
 ```
 
-This generates static files in `public/` ready for deployment.
+Or build individually:
+
+```bash
+npm run build:pages   # Hugo static site → pages/public/
+npm run build:worker  # Worker validation (dry-run)
+```
 
 ## Running Tests
 
-Run unit and integration tests:
+Run all tests (Pages + Worker):
 
 ```bash
 npm test
+```
+
+Run tests separately:
+
+```bash
+npm run test:pages   # Layout tests only
+npm run test:worker  # API tests only
 ```
 
 Run linter:
@@ -100,8 +144,6 @@ Run tests in watch mode:
 ```bash
 npm run test:watch
 ```
-npm run test:smoke
-```
 
 ## Linting
 
@@ -113,21 +155,50 @@ npm run lint
 
 ## Deployment
 
-### Cloudflare Pages
+### Cloudflare Pages (Frontend)
 
 1. Connect your GitHub repository to Cloudflare Pages
 2. Configure build settings:
-   - **Build command:** `npm run build`
+   - **Root directory:** `pages`
+   - **Build command:** `hugo`
    - **Build output directory:** `public`
-   - **Functions directory:** auto-detected from `functions/` (no separate setting required)
-3. Add environment variables in the Cloudflare dashboard:
-   - `ETSY_API_KEY`
-   - `ETSY_SHOP_ID`
-   - `ETSY_API_SHARED_SECRET`
-4. Scheduled sync is configured via Wrangler cron:
-   - `0 0 * * *` (daily at 00:00 UTC)
+   - **Environment variable:** `HUGO_VERSION=0.143.1`
+3. Deploy on push to main branch
 
-Cloudflare Pages will automatically deploy on push to the main branch.
+### Cloudflare Worker (API)
+
+1. Deploy from the worker directory:
+   ```bash
+   cd worker
+   wrangler deploy
+   ```
+
+2. Set secrets:
+   ```bash
+   wrangler secret put ETSY_API_KEY
+   wrangler secret put ETSY_API_SHARED_SECRET
+   wrangler secret put ETSY_SHOP_ID
+   ```
+
+3. Scheduled cache refresh runs automatically daily at 00:00 UTC (configured in `worker/wrangler.toml`)
+
+4. Note your Worker URL (e.g., `vaines-shop-api.your-subdomain.workers.dev`)
+
+5. Update frontend to call Worker API:
+   - In `pages/static/js/products.js`, update API endpoint to Worker URL
+   - Or set up a custom route: `shop.vaines.org/api/* → Worker`
+
+### Deployment Script
+
+Deploy both projects:
+
+```bash
+npm run deploy
+```
+
+This runs:
+- `npm run deploy:pages` (deploys Hugo site via Wrangler)
+- `npm run deploy:worker` (deploys Worker)
 
 ## Project Structure
 
@@ -167,8 +238,13 @@ Returns array of products (cached for 60 minutes).
 
 **Cache Refresh:**
 
-Products are automatically refreshed daily at 00:00 UTC via scheduled cron in production.
+Products are automatically refreshed daily at 00:00 UTC via the Worker's scheduled handler.
 
-**Local development:** Restart the dev server (`Ctrl+C` then `npm run dev`) to clear the cache and fetch fresh data from Etsy.
+**Local development:** Restart the Worker dev server (`Ctrl+C` in the worker terminal, then `npm run dev:worker`) to clear the in-memory cache and fetch fresh data from Etsy.
 
-**Production:** The scheduled handler runs automatically daily, or trigger it manually from the Cloudflare dashboard (Functions → Scheduled Triggers).
+**Production:** The scheduled handler runs automatically daily. You can also trigger it manually:
+```bash
+cd worker
+wrangler tail  # Watch logs
+# Wait for scheduled execution or trigger via Cloudflare dashboard
+```

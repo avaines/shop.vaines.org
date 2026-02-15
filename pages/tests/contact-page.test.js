@@ -6,7 +6,7 @@ const read = (path) => readFileSync(path, "utf8");
 
 describe("contact page layout and accessibility basics", () => {
   it("keeps Formspree submission behaviour and required field names", () => {
-    const contactTemplate = read("layouts/contact/single.html");
+    const contactTemplate = read("pages/layouts/contact/single.html");
 
     expect(contactTemplate).toContain('action="{{ .Site.Params.contact.formAction }}"');
     expect(contactTemplate).toContain('method="POST"');
@@ -16,7 +16,7 @@ describe("contact page layout and accessibility basics", () => {
   });
 
   it("keeps labels and ids paired for form controls", () => {
-    const contactTemplate = read("layouts/contact/single.html");
+    const contactTemplate = read("pages/layouts/contact/single.html");
 
     expect(contactTemplate).toContain('label for="contact-name"');
     expect(contactTemplate).toContain('id="contact-name"');
@@ -27,7 +27,7 @@ describe("contact page layout and accessibility basics", () => {
   });
 
   it("includes responsive and focus styles for the contact layout", () => {
-    const css = read("static/css/main.css");
+    const css = read("pages/static/css/main.css");
 
     expect(css).toContain(".contact-layout");
     expect(css).toContain(".contact-panel");

@@ -2,7 +2,7 @@ import globals from "globals";
 
 export default [
   {
-    files: ["functions/**/*.js"],
+    files: ["worker/**/*.js"],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "module",

@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 # agent.sh
-# Usage: ./agent.sh [iterations]
+# Usage: ./agent.sh [tasks] [iterations]
 # Set AGENT env var to switch AI: codex (default), copilot, or claude
 
 set -euo pipefail
@@ -8,7 +8,7 @@ set -euo pipefail
 iterations="${1:-1}"
 AGENT="${AGENT:-codex}"
 
-plan_file="docs/PLAN.json"
+plan_file="docs/PLAN-S2.json"
 features_file="docs/FEATURES.md"
 decisions_file="docs/DECISIONS.md"
 progress_log_file="docs/LOG.md"
@@ -39,7 +39,6 @@ Task: \
   - commands run \
   - results \
   - next failing $plan_file item \
-- Make a git commit of that feature. \
 
 Constraints: \
 - No scope expansion beyond the selected unit. \
@@ -58,7 +57,7 @@ EOF
 
   case "$AGENT" in
     codex)
-      codex exec "$prompt" | tee "$tmp_result"
+      codex exec --yolo "$prompt" | tee "$tmp_result"
       ;;
     copilot)
       copilot -p "$prompt" --allow-all-tools | tee "$tmp_result"

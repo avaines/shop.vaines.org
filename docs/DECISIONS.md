@@ -43,7 +43,7 @@ Refactoring existing Hugo + Cloudflare Workers + Square API shop to use Etsy API
 ---
 
 ## ADR-002: No External Caching Layer
-**Date:** 2026-02-12  
+**Date:** 2026-02-12
 **Status:** Accepted
 
 ### Context
@@ -69,10 +69,60 @@ Use in-memory caching within the Pages Function with 60-minute TTL. No KV namesp
 
 ---
 
+## ADR-003: Preserve stale in-memory cache for Etsy error fallback
+**Date:** 2026-02-12
+**Status:** Accepted
+
+### Context
+`/api/products` needs graceful failure handling. If Etsy is unavailable, we should return the last good payload when possible.
+
+### Decision
+Keep expired entries in in-memory cache and expose `getStale(key)` for error fallback paths. Normal `get(key)` still enforces TTL and returns `null` when expired.
+
+### Consequences
+**Positive:**
+- Endpoint can return last-known-good product data on transient Etsy failures
+- Maintains normal TTL behaviour for standard reads
+
+**Negative:**
+- Expired entries may remain in memory longer
+
+**Mitigations:**
+- Store only small product payloads
+- Keys remain bounded (`products` cache key)
+
+---
+
+## ADR-004: Use approved footer IA for P051 when production DNS is unavailable
+**Date:** 2026-02-12
+**Status:** Accepted
+
+### Context
+P051 requires matching footer content from `shop.vaines.org`, but DNS resolution is unavailable in this execution environment, so the live footer cannot be fetched directly.
+
+### Decision
+Use the approved footer information architecture already captured in planning notes as the implementation baseline for P051:
+- `My other stuff`: `Blog`, `Instagram`
+- `Quick Links`: `About`, `Contact`, `Privacy`, `Sitemap`
+
+### Consequences
+**Positive:**
+- P051 can be completed without blocking on environment network constraints
+- Footer structure is aligned with the agreed section labels and link set
+
+**Negative:**
+- Verbatim live-site wording cannot be mechanically confirmed in this environment
+
+**Mitigations:**
+- Keep external URL centralisation work in P055
+- Reconcile wording/URLs against production once DNS access is available
+
+---
+
 <!-- Template:
 
 ## ADR-NNN: Title
-**Date:** YYYY-MM-DD  
+**Date:** YYYY-MM-DD
 **Status:** Proposed
 
 ### Context
@@ -83,12 +133,12 @@ Use in-memory caching within the Pages Function with 60-minute TTL. No KV namesp
 
 ### Consequences
 **Positive:**
-- 
+-
 
 **Negative:**
-- 
+-
 
 **Mitigations:**
-- 
+-
 
 -->

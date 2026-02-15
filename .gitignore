@@ -1,4 +1,8 @@
 .DS_Store
-.vscode/
 .env
+.vscode/
+**/node_modules/
+**/.wrangler/
 agent_result.*
+public/
+coverage/coverage-summary.json

@@ -1,0 +1,31 @@
+{{ define "main" }}
+<section class="container gallery-page">
+  <div class="gallery-intro">
+    <h1>{{ .Title }}</h1>
+    <div class="gallery-description">
+      {{ .Content }}
+    </div>
+  </div>
+
+  <div class="gallery-grid">
+    {{ $galleryImages := .Site.Data.gallery }}
+    {{ if $galleryImages }}
+      {{ range $galleryImages }}
+      <figure class="gallery-item">
+        <img src="/images/gallery/{{ .image }}" alt="{{ .title }}" loading="lazy">
+        {{ if .title }}
+        <figcaption class="gallery-caption">
+          <strong>{{ .title }}</strong>
+          {{ if .description }}
+          <span>{{ .description }}</span>
+          {{ end }}
+        </figcaption>
+        {{ end }}
+      </figure>
+      {{ end }}
+    {{ else }}
+      <p class="gallery-empty">No gallery items yet. Add images to <code>data/gallery.json</code></p>
+    {{ end }}
+  </div>
+</section>
+{{ end }}

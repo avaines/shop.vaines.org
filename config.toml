@@ -1,0 +1,67 @@
+baseURL = "https://shop.vaines.org/"
+languageCode = "en-gb"
+title = "Vaines | Shop"
+
+[params]
+  subHeader = "Stuff From My Garage"
+  description = "As much as I would love to keep all the things I make in my <i>'not-on-a-computer'</i> hobby, my wife won't let me. <br>Here are all the things currently cluttering up the house, available on my <a href=\"https://www.etsy.com/uk/shop/TheYorkshireGarage\">Etsy store</a>."
+  author = "Vaines"
+  font = "PT Sans"
+
+  # Category whitelist: only show products with these tags
+  categories = ["Wood", "Slate", "Turned", "Engraved", "Bowl", "Bowls", "Pen", "Pens"]
+
+  [params.contact]
+    formAction = "https://formspree.io/f/mreaqjed"
+    heading = "Send a message"
+    note = "Use this form for product questions or custom requests."
+
+  [params.footer]
+    title = "Vaines | Shop"
+    summary = "Stuff from my garage, checkout my <a href=\"https://www.etsy.com/uk/shop/TheYorkshireGarage\">Etsy store</a>."
+    copyright = "All rights reserved."
+
+    [[params.footer.groups]]
+      heading = "My other stuff"
+      external = true
+
+      [[params.footer.groups.links]]
+        label = "Blog"
+        url = "https://vaines.org/"
+
+      [[params.footer.groups.links]]
+        label = "Instagram"
+        url = "https://www.instagram.com/aidensgotwood/"
+
+        [[params.footer.groups.links]]
+        label = "Etsy Store"
+        url = "https://www.etsy.com/uk/shop/TheYorkshireGarage"
+
+    [[params.footer.groups]]
+      heading = "Quick Links"
+      external = false
+
+      [[params.footer.groups.links]]
+        label = "Gallery"
+        url = "/gallery/"
+
+      [[params.footer.groups.links]]
+        label = "About"
+        url = "/about/"
+
+      [[params.footer.groups.links]]
+        label = "Contact"
+        url = "/contact/"
+
+      [[params.footer.groups.links]]
+        label = "Privacy"
+        url = "/privacy/"
+
+      [[params.footer.groups.links]]
+        label = "Sitemap"
+        url = "/sitemap.xml"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true

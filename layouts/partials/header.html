@@ -1,0 +1,46 @@
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a href="/" class="site-title">{{ .Site.Title }}</a>
+
+    <nav aria-label="Primary navigation">
+      <ul class="site-nav">
+        <li><a href="/">Shop</a></li>
+        <li><a href="/categories/bowls/">Wooden Bowls</a></li>
+        <li><a href="/categories/pens/">Wooden Pens</a></li>
+        <li class="site-nav__dropdown">
+          <button class="site-nav__dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+            Wooden Gifts
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <ul class="site-nav__dropdown-menu">
+            <li><a href="/#all-products">All Products</a></li>
+            {{ range .Site.Params.categories }}
+            <li><a href="/categories/{{ . | urlize }}/">{{ . }}</a></li>
+            {{ end }}
+          </ul>
+        </li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/gallery/">Gallery</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="site-header__social">
+      <a href="https://vaines.org/" target="_blank" rel="noopener" aria-label="Blog" class="social-icon">
+        <i class="fa-solid fa-blog"></i>
+      </a>
+      <a href="https://www.etsy.com/uk/shop/TheYorkshireGarage" target="_blank" rel="noopener" aria-label="Etsy Store" class="social-icon">
+        <i class="fa-brands fa-etsy"></i>
+      </a>
+      <a href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon">
+        <i class="fa-brands fa-instagram"></i>
+      </a>
+    </div>
+  </div>
+</header>
+
+<script src="/js/nav.js"></script>

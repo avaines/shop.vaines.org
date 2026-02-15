@@ -246,6 +246,7 @@ body {
   display: flex;
   align-items: center;
   gap: 16px;
+  flex-wrap: nowrap;
 }
 
 .site-title {
@@ -256,11 +257,19 @@ body {
   white-space: nowrap;
 }
 
+.site-nav-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+}
+
 .site-header__social {
   margin-left: auto;
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .social-icon {
@@ -434,6 +443,8 @@ body {
     transition: right 0.3s ease;
     z-index: 1000;
     overflow-y: auto;
+    display: block;
+    flex: none;
   }
 
   .site-nav-wrapper.active {
@@ -454,6 +465,7 @@ body {
     display: block;
     padding: 16px 12px;
     width: 100%;
+    text-align: left;
   }
 
   .site-nav__dropdown-toggle {
@@ -469,20 +481,30 @@ body {
     background: #f9fafb;
     border-radius: 0;
     margin-top: 0;
+    width: 100%;
+    padding: 0;
+    margin-left: 0;
   }
 
   .site-nav__dropdown-menu li {
     border-bottom: 1px solid #e5e7eb;
+    width: 100%;
   }
 
   .site-nav__dropdown-menu a {
-    padding: 12px 24px;
+    padding: 16px 12px 16px 20px;
+    display: block;
+    width: 100%;
+    text-align: left;
   }
 
   .site-header__social {
     margin-top: 24px;
+    margin-left: 0;
     padding-top: 24px;
     border-top: 1px solid #e5e7eb;
+    justify-content: flex-start;
+  }
   }
 }
 

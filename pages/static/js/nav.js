@@ -1,5 +1,45 @@
 // Navigation dropdown handling
 document.addEventListener('DOMContentLoaded', () => {
+  // Check which categories have products and show menu items
+  async function updateCategoryMenuItems() {
+    try {
+      const apiUrl = window.location.hostname === 'localhost'
+        ? 'http://localhost:8788/api/products'
+        : '/api/products';
+
+      const response = await fetch(apiUrl);
+      if (!response.ok) return;
+
+      const data = await response.json();
+      const products = data.products || data;
+
+      if (!Array.isArray(products)) return;
+
+      // Check if we have any bowls or pens
+      const hasBowls = products.some(p =>
+        p.categories && p.categories.some(c => c.toLowerCase().includes('bowl'))
+      );
+      const hasPens = products.some(p =>
+        p.categories && p.categories.some(c => c.toLowerCase().includes('pen'))
+      );
+
+      // Show menu items if products exist
+      const bowlsMenuItem = document.querySelector('[data-category="bowls"]');
+      const pensMenuItem = document.querySelector('[data-category="pens"]');
+
+      if (bowlsMenuItem && hasBowls) {
+        bowlsMenuItem.style.display = '';
+      }
+      if (pensMenuItem && hasPens) {
+        pensMenuItem.style.display = '';
+      }
+    } catch (error) {
+      console.error('Failed to update category menu items:', error);
+    }
+  }
+
+  updateCategoryMenuItems();
+
   // Mobile menu toggle
   const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
   const navWrapper = document.querySelector('.site-nav-wrapper');

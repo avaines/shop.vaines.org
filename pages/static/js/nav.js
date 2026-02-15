@@ -1,5 +1,37 @@
 // Navigation dropdown handling
 document.addEventListener('DOMContentLoaded', () => {
+  // Mobile menu toggle
+  const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+  const navWrapper = document.querySelector('.site-nav-wrapper');
+
+  if (mobileMenuToggle && navWrapper) {
+    mobileMenuToggle.addEventListener('click', () => {
+      const isExpanded = mobileMenuToggle.getAttribute('aria-expanded') === 'true';
+      mobileMenuToggle.setAttribute('aria-expanded', !isExpanded);
+      navWrapper.classList.toggle('active');
+      document.body.style.overflow = !isExpanded ? 'hidden' : '';
+    });
+
+    // Close mobile menu when clicking nav links
+    navWrapper.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        navWrapper.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // Close mobile menu on window resize if open
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) {
+        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        navWrapper.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  }
+
+  // Dropdown handling
   const dropdownToggle = document.querySelector('.site-nav__dropdown-toggle');
   const dropdown = document.querySelector('.site-nav__dropdown');
 

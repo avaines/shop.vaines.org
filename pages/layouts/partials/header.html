@@ -4,7 +4,13 @@
   <div class="site-header__inner">
     <a href="/" class="site-title">{{ .Site.Title }}</a>
 
-    <nav aria-label="Primary navigation">
+    <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="site-nav-wrapper" aria-label="Primary navigation">
       <ul class="site-nav">
         <li><a href="/">Shop</a></li>
         <li><a href="/categories/bowls/">Wooden Bowls</a></li>
@@ -27,19 +33,19 @@
         <li><a href="/gallery/">Gallery</a></li>
         <li><a href="/contact/">Contact</a></li>
       </ul>
-    </nav>
 
-    <div class="site-header__social">
-      <a href="{{ .Site.Params.social.blog }}" target="_blank" rel="noopener" aria-label="Blog" class="social-icon">
-        <i class="fa-solid fa-blog"></i>
-      </a>
-      <a href="{{ .Site.Params.social.etsy }}" target="_blank" rel="noopener" aria-label="Etsy Store" class="social-icon">
-        <i class="fa-brands fa-etsy"></i>
-      </a>
-      <a href="{{ .Site.Params.social.instagram }}" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon">
-        <i class="fa-brands fa-instagram"></i>
-      </a>
-    </div>
+      <div class="site-header__social">
+        <a href="{{ .Site.Params.social.blog }}" target="_blank" rel="noopener" aria-label="Blog" class="social-icon">
+          <i class="fa-solid fa-blog"></i>
+        </a>
+        <a href="{{ .Site.Params.social.etsy }}" target="_blank" rel="noopener" aria-label="Etsy Store" class="social-icon">
+          <i class="fa-brands fa-etsy"></i>
+        </a>
+        <a href="{{ .Site.Params.social.instagram }}" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon">
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+      </div>
+    </nav>
   </div>
 </header>
 
